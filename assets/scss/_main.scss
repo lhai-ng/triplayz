@@ -1,0 +1,44 @@
+.list-service {
+  ul {
+    li {
+      opacity: 0.25;
+      cursor: pointer;
+      &.active, &:hover {
+        opacity: 1;
+        &:after {
+          opacity: 1;
+        }
+      }
+      &:after {
+        content: "";
+        width: 12px;
+        height: 12px;
+        background: #97DAFF;
+        position: absolute;
+        top: calc(50% - 6px);
+        left: 0;
+        opacity: 0;
+      }
+    }
+  }
+}
+
+.item-casestudy {
+  .avarta {
+    &:hover {
+      .desc-absolute {
+        opacity: 1;
+      }
+    }
+  }
+  .desc-absolute {
+    opacity: 0;
+    transition: .4s all !important;
+    pointer-events: none;
+  }
+}
+
+.swiper-model-1 .swiper-wrapper,
+.swiper-model-2 .swiper-wrapper {
+  transition-timing-function: linear;
+}

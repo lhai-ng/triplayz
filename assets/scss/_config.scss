@@ -1,0 +1,114 @@
+/*======================================== config =================================*/
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  transition: .3s all !important;
+  line-height: normal;
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+  }
+}
+
+button,
+input[type="submit"] {
+  cursor: pointer;
+  outline: none;
+}
+
+body {
+  background: #1D1D27;
+  color: #fff ;
+  font-size: 20px;
+  line-height: 1.25;
+  font-family: 'Grid Suisse Intl';
+  @media (max-width: 1440px) {
+    font-size: 16px;
+  }
+  @media (max-width: 767px) {
+    font-size: 14px;
+  }
+
+  &.active {
+    overflow: hidden;
+  }
+
+  img {
+    transition: .34s all !important;
+    max-width: 100%;
+    display: inline !important;
+  }
+}
+
+.container {
+  max-width: 1480px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 100px;
+  @media (max-width: 1200px) {
+    max-width: 100%;
+    padding: 0 60px;
+  }
+  @media (max-width: 1023px) {
+    padding: 0 40px;
+  }
+  @media (max-width: 767px) {
+    padding: 0 20px;
+  }
+}
+
+.padd-main {
+  padding: 100px 0;
+  @media (max-width: 1400px) {
+    padding: 60px 0;
+  }
+  @media (max-width: 1200px) {
+    padding: 48px 0;
+  }
+  @media (max-width: 767px) {
+    padding: 32px 0;
+  }
+}
+
+.btn-main {
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #FFFFFF14;
+    border: 1px solid #FFFFFF14;
+    position: relative;
+    font-family: "Anek Latin";
+    padding: 12px 28px;
+  }
+  .dot {
+    width: 4px;
+    height: 4px;
+    background: #fff;
+    position: absolute;
+    &:first-child {
+      top: 0;
+      left: 0;
+    }
+    &:nth-child(2) {
+      top: 0;
+      right: 0;
+    }
+    &:nth-child(3) {
+      left: 0;
+      bottom: 0;
+    }
+    &:last-child {
+      bottom: 0;
+      right: 0;
+    }
+  }
+}

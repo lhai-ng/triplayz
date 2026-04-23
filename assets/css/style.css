@@ -1,0 +1,308 @@
+@font-face {
+  font-family: "Grid Suisse Intl";
+  src: url("../fonts/GridSuisseIntl-Medium.woff2") format("woff2"), url("../fonts/GridSuisseIntl-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Grid Suisse Intl";
+  src: url("../fonts/GridSuisseIntl-MediumItalic.woff2") format("woff2"), url("../fonts/GridSuisseIntl-MediumItalic.woff") format("woff");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Grid Suisse Intl";
+  src: url("../fonts/GridSuisseIntl-Regular.woff2") format("woff2"), url("../fonts/GridSuisseIntl-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Grid Suisse Intl";
+  src: url("../fonts/GridSuisseIntl-RegularItalic.woff2") format("woff2"), url("../fonts/GridSuisseIntl-RegularItalic.woff") format("woff");
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Grid Suisse Intl";
+  src: url("../fonts/GridSuisseIntl-Thin.woff2") format("woff2"), url("../fonts/GridSuisseIntl-Thin.woff") format("woff");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Grid Suisse Intl";
+  src: url("../fonts/GridSuisseIntl-ThinItalic.woff2") format("woff2"), url("../fonts/GridSuisseIntl-ThinItalic.woff") format("woff");
+  font-weight: 100;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Grid Suisse Intl";
+  src: url("../fonts/GridSuisseIntl-UltraLight.woff2") format("woff2"), url("../fonts/GridSuisseIntl-UltraLight.woff") format("woff");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Grid Suisse Intl Ultralight It";
+  src: url("../fonts/GridSuisseIntl-UltralightItalic.woff2") format("woff2"), url("../fonts/GridSuisseIntl-UltralightItalic.woff") format("woff");
+  font-weight: 200;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Grid Suisse Intl";
+  src: url("../fonts/GridSuisseIntl-Black.woff2") format("woff2"), url("../fonts/GridSuisseIntl-Black.woff") format("woff");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Grid Suisse Intl";
+  src: url("../fonts/GridSuisseIntl-BlackItalic.woff2") format("woff2"), url("../fonts/GridSuisseIntl-BlackItalic.woff") format("woff");
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Grid Suisse Intl";
+  src: url("../fonts/GridSuisseIntl-Bold.woff2") format("woff2"), url("../fonts/GridSuisseIntl-Bold.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Grid Suisse Intl";
+  src: url("../fonts/GridSuisseIntl-BoldItalic.woff2") format("woff2"), url("../fonts/GridSuisseIntl-BoldItalic.woff") format("woff");
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Grid Suisse Intl Book";
+  src: url("../fonts/GridSuisseIntl-Book.woff2") format("woff2"), url("../fonts/GridSuisseIntl-Book.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Grid Suisse Intl Book";
+  src: url("../fonts/GridSuisseIntl-BookItalic.woff2") format("woff2"), url("../fonts/GridSuisseIntl-BookItalic.woff") format("woff");
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Grid Suisse Intl";
+  src: url("../fonts/GridSuisseIntl-DemiBold.woff2") format("woff2"), url("../fonts/GridSuisseIntl-DemiBold.woff") format("woff");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Grid Suisse Intl DemiBold It";
+  src: url("../fonts/GridSuisseIntl-DemiBoldItalic.woff2") format("woff2"), url("../fonts/GridSuisseIntl-DemiBoldItalic.woff") format("woff");
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Grid Suisse Intl";
+  src: url("../fonts/GridSuisseIntl-Light.woff2") format("woff2"), url("../fonts/GridSuisseIntl-Light.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+.anek {
+  font-family: "Anek Latin", sans-serif;
+}
+
+.suisse {
+  font-family: "Grid Suisse Intl";
+}
+
+/*======================================== config =================================*/
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  transition: 0.3s all !important;
+  line-height: normal;
+}
+a:hover, a:focus {
+  text-decoration: none;
+}
+
+button,
+input[type=submit] {
+  cursor: pointer;
+  outline: none;
+}
+
+body {
+  background: #1D1D27;
+  color: #fff;
+  font-size: 20px;
+  line-height: 1.25;
+  font-family: "Grid Suisse Intl";
+}
+@media (max-width: 1440px) {
+  body {
+    font-size: 16px;
+  }
+}
+@media (max-width: 767px) {
+  body {
+    font-size: 14px;
+  }
+}
+body.active {
+  overflow: hidden;
+}
+body img {
+  transition: 0.34s all !important;
+  max-width: 100%;
+  display: inline !important;
+}
+
+.container {
+  max-width: 1480px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 100px;
+}
+@media (max-width: 1200px) {
+  .container {
+    max-width: 100%;
+    padding: 0 60px;
+  }
+}
+@media (max-width: 1023px) {
+  .container {
+    padding: 0 40px;
+  }
+}
+@media (max-width: 767px) {
+  .container {
+    padding: 0 20px;
+  }
+}
+
+.padd-main {
+  padding: 100px 0;
+}
+@media (max-width: 1400px) {
+  .padd-main {
+    padding: 60px 0;
+  }
+}
+@media (max-width: 1200px) {
+  .padd-main {
+    padding: 48px 0;
+  }
+}
+@media (max-width: 767px) {
+  .padd-main {
+    padding: 32px 0;
+  }
+}
+
+.btn-main a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.0784313725);
+  border: 1px solid rgba(255, 255, 255, 0.0784313725);
+  position: relative;
+  font-family: "Anek Latin";
+  padding: 12px 28px;
+}
+.btn-main .dot {
+  width: 4px;
+  height: 4px;
+  background: #fff;
+  position: absolute;
+}
+.btn-main .dot:first-child {
+  top: 0;
+  left: 0;
+}
+.btn-main .dot:nth-child(2) {
+  top: 0;
+  right: 0;
+}
+.btn-main .dot:nth-child(3) {
+  left: 0;
+  bottom: 0;
+}
+.btn-main .dot:last-child {
+  bottom: 0;
+  right: 0;
+}
+
+.h-menu ul {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.h-menu a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 16px 36px;
+}
+
+.btn-head-menu a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 16px 36px;
+}
+
+.list-service ul li {
+  opacity: 0.25;
+  cursor: pointer;
+}
+.list-service ul li.active, .list-service ul li:hover {
+  opacity: 1;
+}
+.list-service ul li.active:after, .list-service ul li:hover:after {
+  opacity: 1;
+}
+.list-service ul li:after {
+  content: "";
+  width: 12px;
+  height: 12px;
+  background: #97DAFF;
+  position: absolute;
+  top: calc(50% - 6px);
+  left: 0;
+  opacity: 0;
+}
+
+.item-casestudy .avarta:hover .desc-absolute {
+  opacity: 1;
+}
+.item-casestudy .desc-absolute {
+  opacity: 0;
+  transition: 0.4s all !important;
+  pointer-events: none;
+}
+
+.swiper-model-1 .swiper-wrapper,
+.swiper-model-2 .swiper-wrapper {
+  transition-timing-function: linear;
+}
+
+/*# sourceMappingURL=style.css.map */

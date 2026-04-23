@@ -1,0 +1,13 @@
+{
+  "name": "halotel",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "tailwindcss -i ./assets/css/input.css -o ./assets/css/tailwind.css --watch",
+    "build": "tailwindcss -i ./assets/css/input.css -o ./assets/css/tailwind.css --minify"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.2",
+    "tailwindcss": "^4.2.2"
+  }
+}

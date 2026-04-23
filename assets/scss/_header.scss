@@ -1,0 +1,23 @@
+.h-menu {
+  ul {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 16px 36px;
+  }
+}
+.btn-head-menu {
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 16px 36px;
+  }
+}

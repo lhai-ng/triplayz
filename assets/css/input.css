@@ -1,0 +1,48 @@
+@import "tailwindcss";
+@source "../../**/*.php";
+@source "../../assets/js/**/*.js";
+
+@theme {
+    --spacing: 0.25rem;
+    --color-black: #101820;
+    --color-red: #E81515;
+    --color-orange: #FF5100;
+    --color-pink: #FCEBEA;
+    --color-blue: #483BA8;
+    --color-gray: #F2F4F5;
+    --color-main: #9A4B2D;
+    --color-yellow: #EDCC6E;
+
+    --text-2: 0.5rem;    /* 8px */
+    --text-3: 0.75rem;   /* 12px */
+    --text-4: 1rem;      /* 16px */
+    --text-5: 1.25rem;   /* 20px */
+    --text-6: 1.5rem;    /* 24px */
+    --text-7: 1.75rem;   /* 28px */
+    --text-8: 2rem;      /* 32px */
+    --text-9: 2.25rem;   /* 36px */
+    --text-10: 2.5rem;   /* 40px */
+    --text-11: 2.75rem;  /* 44px */
+    --text-12: 3rem;     /* 48px */
+    --text-13: 3.25rem;  /* 52px */
+    --text-14: 3.5rem;   /* 56px */
+
+    --radius-none: 0;
+    --radius-1: 0.25rem;   /* 4px */
+    --radius-2: 0.5rem;    /* 8px */
+    --radius-3: 0.75rem;   /* 12px */
+    --radius-4: 1rem;      /* 16px */
+    --radius-5: 1.25rem;   /* 20px */
+    --radius-6: 1.5rem;    /* 24px */
+    --radius-7: 1.75rem;   /* 28px */
+    --radius-8: 2rem;      /* 32px */
+    --radius-9: 2.25rem;   /* 36px */
+    --radius-10: 2.5rem;   /* 40px */
+
+    /* Responsive breakpoints */
+    --breakpoint-sm: 576px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+    --breakpoint-xl: 1200px;
+    --breakpoint-2xl: 1440px;
+}
