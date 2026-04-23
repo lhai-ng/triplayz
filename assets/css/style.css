@@ -261,6 +261,11 @@ body img {
   gap: 4px;
   padding: 16px 36px;
 }
+@media (max-width: 1200px) {
+  .h-menu a {
+    padding: 16px 24px;
+  }
+}
 
 .btn-head-menu a {
   display: flex;

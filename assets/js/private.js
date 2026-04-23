@@ -9,7 +9,7 @@ $(document).ready(function() {
 
     var swiperConfig = {
         spaceBetween: 16,
-        slidesPerView: 5.5,
+        slidesPerView: 2,
         loop: true,
         centeredSlides: true,
         speed: 3000,
@@ -17,6 +17,20 @@ $(document).ready(function() {
         autoplay: {
             delay: 0,
             disableOnInteraction: false,
+        },
+        breakpoints: {
+            768: {
+                slidesPerView: 3,
+            },
+            1024: {
+                slidesPerView: 4,
+            },
+            1200: {
+                slidesPerView: 5.5,
+            },
+            1400: {
+                slidesPerView: 5.5,
+            },
         },
     };
 

@@ -10,6 +10,9 @@
     justify-content: center;
     gap: 4px;
     padding: 16px 36px;
+    @media (max-width: 1200px) {
+      padding: 16px 24px;
+    }
   }
 }
 .btn-head-menu {
