@@ -286,7 +286,7 @@
         </div>
     </section>
 
-    <section class="relative overflow-hidden bg-[#483BA8] pt-10 md:pt-20 lg:pt-25 3xl:pt-50">
+    <section id="company" class="relative overflow-hidden bg-[#483BA8] pt-10 md:pt-20 lg:pt-25 3xl:pt-50">
         <div class="wrapper relative overflow-hidden">
             <img src="assets/images/top-company.png" class="w-full absolute top-0 left-0" alt="">
             <div class="px-6 md:px-10 text-center relative mb-16 md:mb-28 3xl:mb-31">
@@ -333,8 +333,16 @@
                     </div>
                 </div>
             </div>
-            <div class="text-center">
-                <img src="assets/images/maps.png" class="inline" style="mix-blend-mode: plus-lighter;" alt="">
+        </div>
+        <div class="company-globe-container">
+            <div id="company-globe" class="company-globe">
+                <canvas id="company-globe-canvas"></canvas>
+                <div id="company-globe-labels"></div>
+                <div id="company-globe-msg">
+                    <div id="company-globe-msg-text">Creating...</div>
+                    <div id="company-globe-prog-bar"><div id="company-globe-prog"></div></div>
+                </div>
+                <div id="company-globe-hint">DRAG TO ROTATE</div>
             </div>
         </div>
     </section>
@@ -475,6 +483,8 @@
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
 <script src="assets/js/animation.js"></script>
 
 <?php include 'footer.php'; ?>
