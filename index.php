@@ -1,11 +1,11 @@
 <?php include 'header.php'; ?>
 <main>
     <section class="relative overflow-hidden">
-        <img src="assets/images/bn.svg" class="w-full h-full absolute top-0 left-0 object-cover" alt="">
+        <div class="gradient-canvas"></div>
+        
         <div class="wrapper p-6 md:p-10 min-h-[unset] md:min-h-[100vh] relative">
             <div
                 class="relative md:absolute top-[-13%] lg:top-0 left-[16%] md:left-[10%] lg:left-0 flex items-center z-2 w-full justify-center xl:justify-start scale-[1.8] md:scale-[1]">
-                <img src="assets/images/bn-1.svg" alt="">
             </div>
             <div
                 class="relative md:absolute z-3 bottom-0 right-0 px-0 md:px-10 max-w-full xl:max-w-[60%] text-center md:text-left">
@@ -286,7 +286,7 @@
         </div>
     </section>
 
-    <section class="relative overflow-hidden bg-[#483BA8] pt-10 md:pt-20 lg:pt-25 3xl:pt-50">
+    <section id="company" class="relative overflow-hidden bg-[#483BA8] pt-10 md:pt-20 lg:pt-25 3xl:pt-50">
         <div class="wrapper relative overflow-hidden">
             <img src="assets/images/top-company.png" class="w-full absolute top-0 left-0" alt="">
             <div class="px-6 md:px-10 text-center relative mb-16 md:mb-28 3xl:mb-31">
@@ -333,8 +333,16 @@
                     </div>
                 </div>
             </div>
-            <div class="text-center">
-                <img src="assets/images/maps.png" class="inline" style="mix-blend-mode: plus-lighter;" alt="">
+        </div>
+        <div class="company-globe-container">
+            <div id="company-globe" class="company-globe">
+                <canvas id="company-globe-canvas"></canvas>
+                <div id="company-globe-labels"></div>
+                <div id="company-globe-msg">
+                    <div id="company-globe-msg-text">Creating...</div>
+                    <div id="company-globe-prog-bar"><div id="company-globe-prog"></div></div>
+                </div>
+                <div id="company-globe-hint">DRAG TO ROTATE</div>
             </div>
         </div>
     </section>
@@ -473,4 +481,10 @@
         </div>
     </section>
 </main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script src="assets/js/animation.js"></script>
+
 <?php include 'footer.php'; ?>
