@@ -1116,9 +1116,9 @@
 (function initServiceAnimation() {
 
   const SRV_IMAGES = [
-    "./assets/images/srv-1.png",
-    "./assets/images/srv-2.png",
-    "./assets/images/srv-3.png",
+    "./assets/images/Gami.png",
+    "./assets/images/BFSI.png",
+    "./assets/images/Digital.png",
   ];
 
   const SRV_DESCRIPTIONS = [
