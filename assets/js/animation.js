@@ -1,17 +1,71 @@
+(function initPreloader() {
+  document.body.style.overflowY = "hidden";
+
+  const ring = document.getElementById("ring");
+  const loaderIcon = document.getElementById("loader-icon");
+  const columns = document.querySelectorAll("#preloader .column");
+
+  const CIRC = 2 * Math.PI * 60;
+  ring.style.strokeDasharray = CIRC;
+  ring.style.strokeDashoffset = CIRC;
+
+  const steps = [
+    { pct: 35, duration: 0.7, ease: "power1.inOut" },
+    { pct: 50, duration: 0.5, ease: "power1.inOut" },
+    { pct: 80, duration: 0.8, ease: "power2.inOut" },
+    { pct: 100, duration: 0.6, ease: "power2.in" },
+  ];
+
+  const tl = gsap.timeline();
+
+  steps.forEach((step) => {
+    tl.to(ring, {
+      strokeDashoffset: CIRC - (step.pct / 100) * CIRC,
+      duration: step.duration,
+      ease: step.ease,
+    });
+
+    if (step.pct < 100) {
+      tl.to({}, { duration: gsap.utils.random(0.15, 0.35) });
+    }
+  });
+
+  tl.to(loaderIcon, {
+    opacity: 0,
+    scale: 0.95,
+    duration: 0.4,
+    ease: "power2.in",
+  });
+
+  tl.to(
+    ".column",
+    {
+      rotateY: -90,
+      translateZ: 180,
+      transformOrigin: "left center",
+      duration: 1,
+      stagger: -0.03,
+      ease: "power4.inOut",
+      onComplete: () => {
+        gsap.set("#preloader", { display: "none" });
+        document.body.style.overflowY = "";
+      },
+    },
+    "<0.1",
+  );
+})();
+
 (function initVisionShapeAnimation() {
-  const section = document.querySelector(".vision-shape-section");
-  if (!section) return;
+  const scrollTrig = document.getElementById("vision-scroll-trigger");
+  const section = document.getElementById("vision-pinned-section");
+  if (!scrollTrig || !section) return;
 
   const logoTop = section.querySelector(".logo-top img");
   const logoBottom = section.querySelector(".logo-bottom img");
   const textVision = section.querySelector(".vision");
   const textShape = section.querySelector(".shape");
-
   if (!logoTop || !logoBottom || !textVision || !textShape) return;
 
-  gsap.registerPlugin(ScrollTrigger);
-
-  // --- Setup gradient text ---
   const MUTED = "hsl(240,15%,53%)";
   const VIVID = "#fff";
 
@@ -20,88 +74,59 @@
     el.style.backgroundClip = "text";
     el.style.color = "transparent";
   });
+  textVision.style.right = "0";
+  textShape.style.left = "0";
+  logoTop.style.bottom = "32vh";
+  logoTop.style.opacity = "0";
+  logoBottom.style.top = "32vh";
+  logoBottom.style.opacity = "0";
 
-  // textVision trượt từ phải sang trái → sweep cũng chạy từ phải sang trái
-  textVision.style.backgroundImage = `linear-gradient(to left, ${MUTED} 0%, ${MUTED} 0%)`;
+  /* ── helpers ── */
+  function getProgress() {
+    const rect = scrollTrig.getBoundingClientRect();
+    const total = scrollTrig.offsetHeight - window.innerHeight;
+    return Math.max(0, Math.min(1, -rect.top / total));
+  }
 
-  // textShape trượt từ trái sang phải → sweep chạy từ trái sang phải
-  textShape.style.backgroundImage = `linear-gradient(to right, ${MUTED} 0%, ${MUTED} 0%)`;
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
+  }
 
-  // Proxy để GSAP scrub kéo giá trị
-  const vProxy = { pct: 0 };
-  const sProxy = { pct: 0 };
+  /* ── main update ── */
+  function onScroll() {
+    const p = getProgress();
 
-  // --- Set trạng thái ban đầu ---
-  gsap.set(logoTop, { bottom: "32vh", opacity: 0 });
-  gsap.set(logoBottom, { top: "32vh", opacity: 0 });
-  gsap.set(textVision, { right: "0" });
-  gsap.set(textShape, { left: "0" });
+    const t = Math.max(0, Math.min(1, (p - 0.14) / 0.72));
 
-  let tl = gsap.timeline({
-    scrollTrigger: {
-      trigger: ".vision-shape-section",
-      start: "top top",
-      end: "+=300%",
-      pin: true,
-      scrub: 0.1,
-      anticipatePin: 0.5,
+    textVision.style.right = lerp(0, 32, t) + "vh";
+    textShape.style.left = lerp(0, 32, t) + "vh";
+
+    logoTop.style.bottom = lerp(32, -3, t) + "vh";
+    logoTop.style.opacity = t;
+    logoBottom.style.top = lerp(32, -3, t) + "vh";
+    logoBottom.style.opacity = t;
+
+    const pct = t * 200;
+    textVision.style.backgroundImage = `linear-gradient(to left, ${VIVID} ${pct - 6}%, ${MUTED} ${pct}%)`;
+    textShape.style.backgroundImage = `linear-gradient(to right, ${VIVID} ${pct - 6}%, ${MUTED} ${pct}%)`;
+  }
+
+  let _rafPending = false;
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (_rafPending) return;
+      _rafPending = true;
+      requestAnimationFrame(() => {
+        onScroll();
+        _rafPending = false;
+      });
     },
-  });
+    { passive: true },
+  );
 
-  tl.to(
-    textVision,
-    { delay: .2, right: "32vh", ease: "linear", duration: 1.1 },
-    0,
-  )
-    .to(
-      textShape,
-      { delay: .2, left: "32vh", ease: "linear", duration: 1.1 },
-      0,
-    )
-    .to(
-      logoTop,
-      { delay: .2, bottom: "-3vh", opacity: 1, ease: "linear", duration: 1 },
-      0,
-    )
-    .to(
-      logoBottom,
-      { delay: .2, top: "-3vh", opacity: 1, ease: "linear", duration: 1 },
-      0,
-    )
-
-    // Sweep màu textVision: phải → trái, khớp với hướng trượt
-    .to(
-      vProxy,
-      {
-        delay: .2,
-        pct: 200,
-        ease: "linear",
-        duration: 1.1,
-        onUpdate() {
-          const p =vProxy.pct;
-          textVision.style.backgroundImage = `linear-gradient(to left, ${VIVID} ${p - 6}%, ${MUTED} ${p}%)`;
-        },
-      },
-      0,
-    )
-
-    // Sweep màu textShape: trái → phải, khớp với hướng trượt
-    .to(
-      sProxy,
-      {
-        delay: .2,
-        pct: 200,
-        ease: "linear",
-        duration: 1.1,
-        onUpdate() {
-          const p = sProxy.pct;
-          textShape.style.backgroundImage = `linear-gradient(to right, ${VIVID} ${p - 6}%, ${MUTED} ${p}%)`;
-        },
-      },
-      0,
-    )
-
-    .to({}, { duration: 0.2 });
+  window.addEventListener("resize", onScroll);
+  onScroll(); 
 })();
 
 (function initButtonAnimation() {
