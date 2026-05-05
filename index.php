@@ -118,7 +118,7 @@
                     </h2>
 
                     <div
-                        class="mt-6 md:mt-10 lg:mt-14 3xl:mt-36 flex items-end gap-x-10 xl:gap-x-82 justify-between 3xl:justify-[unset] md:flex-[unset]">
+                        class="mt-6 md:mt-10 lg:mt-14 3xl:mt-36 flex items-end gap-x-10 xl:gap-x-82 justify-between flex-wrap 3xl:justify-[unset] md:flex-[unset]">
                         <div class="btn-main order-2 md:order-1">
                             <a href="">
                                 DOWNLOAD BROCHURE
@@ -219,15 +219,8 @@
                                 moves your business meaningfully forward.
                             </div>
                             <ul class="desc-item-servce grid grid-cols-2 gap-x-5 gap-y-1 pl-4 list-disc anek">
-                                <li>UI/UX &amp; Creative</li>
-                                <li>UI/UX &amp; Creative</li>
-                                <li>Design</li>
-                                <li>Design</li>
-                                <li>Web &amp; App</li>
-                                <li>Web &amp; App</li>
-                                <li>Development</li>
-                                <li>Development</li>
-                                <li>Business Platform &amp; System Integration</li>
+                                <li>UI/UX &amp; Creative Design</li>
+                                <li>Web &amp; App Development</li>
                                 <li>Business Platform &amp; System Integration</li>
                             </ul>
                         </div>
