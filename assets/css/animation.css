@@ -580,7 +580,6 @@ footer {
     text-align: start;
 }
 
-/* ── Wipe line — fixed để tính đúng tọa độ viewport ── */
 #srv-wipe-line {
     position: absolute;
     left: 0;
@@ -590,4 +589,16 @@ footer {
     z-index: 30;
     pointer-events: none;
     opacity: 0;
+}
+
+
+/* ==================== */
+/* FOOTER */
+/* ==================== */
+
+.other-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
 }

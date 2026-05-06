@@ -85,8 +85,6 @@ $(document).ready(function () {
 
       const MAIN_SLOW = 1.8;
       const FOOTER_SLOW = 0.7;
-      const FOOTER_DWELL = 0; 
-      const SHADOW_MAX = 30;
 
       const spacer = document.createElement("div");
       spacer.id = "footer-reveal-spacer";
@@ -101,7 +99,7 @@ $(document).ready(function () {
         const V = window.innerHeight;
         const FH = footerEl.offsetHeight;
         spacer.style.height =
-          V * MAIN_SLOW + V * FOOTER_DWELL + Math.max(0, FH - V) + "px";
+          Math.max(V * MAIN_SLOW *.94, V * FOOTER_SLOW *.94 + Math.max(0, FH - V)) + "px";
       }
 
       updateSpacer();
@@ -120,19 +118,14 @@ $(document).ready(function () {
           mainEl.style.transform = `translateY(-${mainDelta}px)`;
 
           const mainProgress = Math.min(1, mainDelta / V);
-          const shadowBlur = SHADOW_MAX * (1 - mainProgress);
-          mainEl.style.boxShadow =
-            mainProgress < 1
-              ? `0 ${shadowBlur}px ${shadowBlur * 0.8}px rgba(0,0,0,${(1 - mainProgress) * 0.2})`
-              : "";
+          mainEl.style.boxShadow = `0 10px 20px rgba(0,0,0,.3)`;
 
           // ── Footer reveal
           const footerProgress = Math.min(1, rawDelta / (FOOTER_SLOW * V));
           const footerParallax = FOOTER_OFFSET * (1 - footerProgress);
 
-          // ── Footer scroll-through: bắt đầu sau reveal + dwell
           const FH = footerEl.offsetHeight;
-          const footerScrollStart = (FOOTER_SLOW + FOOTER_DWELL) * V;
+          const footerScrollStart = (FOOTER_SLOW) * V;
           const footerScrollDelta = Math.min(
             Math.max(0, rawDelta - footerScrollStart),
             Math.max(0, FH - V),
