@@ -442,7 +442,7 @@
         <img src="assets/images/bn-form.jpg" class="w-full h-full absolute object-cover top-0 left-0" alt="">
         <div class="grid grid-cols-12 gap-10 relative z-2">
             <div class="item item col-span-12 lg:col-span-6 2xl:col-span-7 h-full flex items-center">
-                <div class="text-animation text-[48px] lg:text-[64px] 3xl:text-[80px] font-medium">Get a free consultation</div>
+                <div class="title-animation text-[48px] lg:text-[64px] 3xl:text-[80px] font-medium">Get a free consultation</div>
             </div>
             <div class="item col-span-12 lg:col-span-6 2xl:col-span-5">
                 <div class="bg-white w-full p-10 text-black">

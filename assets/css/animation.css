@@ -1,14 +1,21 @@
 /* ==================== */
 /* PARALLAX */
 /* ==================== */
+body {
+  background-color: #483ba8;
+}
+
 main {
   position: relative;
-  z-index: 9;
+  z-index: 2;
+  background-color: #1d1d27;
 }
 
 footer {
   position: fixed;
+  top: 0;      /* top, không phải bottom */
   left: 0;
+  width: 100%;
   z-index: 1;
 }
 
@@ -371,7 +378,7 @@ footer {
 }
 
 .srv-anim {
-  background-color: hsla(240, 15%, 13%, 1);
+  background-color: #1d1d27;
 }
 
 #service { overflow: clip; }

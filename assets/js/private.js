@@ -77,6 +77,81 @@ $(document).ready(function () {
 
       ScrollTrigger.refresh();
     }
+
+    (function initFooterReveal() {
+      const mainEl = document.querySelector("main");
+      const footerEl = document.querySelector("footer");
+      if (!mainEl || !footerEl) return;
+
+      const MAIN_SLOW = 1.8;
+      const FOOTER_SLOW = 0.7;
+      const FOOTER_DWELL = 0; 
+      const SHADOW_MAX = 30;
+
+      const spacer = document.createElement("div");
+      spacer.id = "footer-reveal-spacer";
+      spacer.style.pointerEvents = "none";
+      mainEl.insertAdjacentElement("afterend", spacer);
+
+      function getOffset() {
+        return window.innerHeight * 0.4;
+      }
+
+      function updateSpacer() {
+        const V = window.innerHeight;
+        const FH = footerEl.offsetHeight;
+        spacer.style.height =
+          V * MAIN_SLOW + V * FOOTER_DWELL + Math.max(0, FH - V) + "px";
+      }
+
+      updateSpacer();
+      footerEl.style.transform = `translateY(${getOffset()}px)`;
+
+      lenis.on("scroll", ({ scroll }) => {
+        const V = window.innerHeight;
+        const FOOTER_OFFSET = getOffset();
+        const triggerY = mainEl.offsetHeight - V;
+
+        if (scroll > triggerY) {
+          const rawDelta = scroll - triggerY;
+
+          // ── Main
+          const mainDelta = rawDelta / MAIN_SLOW;
+          mainEl.style.transform = `translateY(-${mainDelta}px)`;
+
+          const mainProgress = Math.min(1, mainDelta / V);
+          const shadowBlur = SHADOW_MAX * (1 - mainProgress);
+          mainEl.style.boxShadow =
+            mainProgress < 1
+              ? `0 ${shadowBlur}px ${shadowBlur * 0.8}px rgba(0,0,0,${(1 - mainProgress) * 0.2})`
+              : "";
+
+          // ── Footer reveal
+          const footerProgress = Math.min(1, rawDelta / (FOOTER_SLOW * V));
+          const footerParallax = FOOTER_OFFSET * (1 - footerProgress);
+
+          // ── Footer scroll-through: bắt đầu sau reveal + dwell
+          const FH = footerEl.offsetHeight;
+          const footerScrollStart = (FOOTER_SLOW + FOOTER_DWELL) * V;
+          const footerScrollDelta = Math.min(
+            Math.max(0, rawDelta - footerScrollStart),
+            Math.max(0, FH - V),
+          );
+
+          footerEl.style.transform = `translateY(${footerParallax - footerScrollDelta}px)`;
+        } else {
+          mainEl.style.transform = "";
+          mainEl.style.boxShadow = "";
+          footerEl.style.transform = `translateY(${getOffset()}px)`;
+        }
+      });
+
+      window.addEventListener("resize", () => {
+        updateSpacer();
+        footerEl.style.transform = `translateY(${getOffset()}px)`;
+        ScrollTrigger.refresh();
+      });
+    })();
   }
 
   if (typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined") {
