@@ -3,24 +3,123 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
+    li {
+      position: relative;
+
+      &:hover {
+        .sub-menu-child {
+          opacity: 1;
+          pointer-events: all;
+        }
+      }
+    }
   }
+
   a {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 4px;
     padding: 16px 36px;
+
     @media (max-width: 1200px) {
       padding: 16px 24px;
     }
   }
+
+
 }
+
+.sub-menu-child {
+  position: absolute;
+  top: 56px;
+  left: 0;
+  transition: 0.3s all !important;
+  padding: 18px 0 0 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sub-menu {
+  // display: block;
+  border: 1px solid #FFFFFF26;
+  background: #2B2B38;
+  border-radius: 8px;
+  padding: 8px;
+  width: 586px;
+
+  &.company {
+    padding: 16px;
+    width: 870px;
+  }
+
+  li {
+    margin-bottom: 8px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    a {
+      display: flex;
+      align-items: center;
+      font-size: 18px;
+      padding: 20px;
+      overflow: hidden;
+      border-radius: 4px;
+
+      &:hover {
+        background: #FFFFFF14;
+      }
+
+
+      .icon {
+        flex: 0 0 32px;
+        max-width: 32px;
+      }
+
+      .text {
+        flex: 0 0 calc(100% - 32px);
+        max-width: calc(100% - 32px);
+        width: 100%;
+        padding-left: 24px;
+
+      }
+
+      .h-title {
+        font-size: 20px;
+        font-weight: 500;
+        display: block;
+        margin-bottom: 8px;
+      }
+    }
+  }
+}
+
 .btn-head-menu {
+  &:hover {
+    .sub-menu-child {
+      opacity: 1;
+      pointer-events: all;
+    }
+  }
+
   a {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 4px;
     padding: 16px 36px;
+  }
+
+  .sub-menu {
+    width: 240px;
+
+    a {
+      justify-content: flex-start;
+      padding: 16px;
+      font-size: 16px;
+    }
   }
 }

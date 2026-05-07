@@ -224,7 +224,6 @@ body img {
   border: 1px solid rgba(255, 255, 255, 0.0784313725);
   position: relative;
   font-family: "Anek Latin";
-  padding: 12px 28px;
 }
 .btn-main .dot {
   width: 4px;
@@ -260,6 +259,13 @@ body img {
   align-items: center;
   justify-content: center;
 }
+.h-menu ul li {
+  position: relative;
+}
+.h-menu ul li:hover .sub-menu-child {
+  opacity: 1;
+  pointer-events: all;
+}
 .h-menu a {
   display: flex;
   align-items: center;
@@ -273,12 +279,79 @@ body img {
   }
 }
 
+.sub-menu-child {
+  position: absolute;
+  top: 56px;
+  left: 0;
+  transition: 0.3s all !important;
+  padding: 18px 0 0 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sub-menu {
+  border: 1px solid rgba(255, 255, 255, 0.1490196078);
+  background: #2B2B38;
+  border-radius: 8px;
+  padding: 8px;
+  width: 586px;
+}
+.sub-menu.company {
+  padding: 16px;
+  width: 870px;
+}
+.sub-menu li {
+  margin-bottom: 8px;
+}
+.sub-menu li:last-child {
+  margin-bottom: 0;
+}
+.sub-menu li a {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  padding: 20px;
+  overflow: hidden;
+  border-radius: 4px;
+}
+.sub-menu li a:hover {
+  background: rgba(255, 255, 255, 0.0784313725);
+}
+.sub-menu li a .icon {
+  flex: 0 0 32px;
+  max-width: 32px;
+}
+.sub-menu li a .text {
+  flex: 0 0 calc(100% - 32px);
+  max-width: calc(100% - 32px);
+  width: 100%;
+  padding-left: 24px;
+}
+.sub-menu li a .h-title {
+  font-size: 20px;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.btn-head-menu:hover .sub-menu-child {
+  opacity: 1;
+  pointer-events: all;
+}
 .btn-head-menu a {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 4px;
   padding: 16px 36px;
+}
+.btn-head-menu .sub-menu {
+  width: 240px;
+}
+.btn-head-menu .sub-menu a {
+  justify-content: flex-start;
+  padding: 16px;
+  font-size: 16px;
 }
 
 .list-service ul li {

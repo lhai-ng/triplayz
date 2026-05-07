@@ -49,7 +49,7 @@
         if (history.scrollRestoration) {
             history.scrollRestoration = 'manual';
         }
-        window.addEventListener('pageshow', function() {
+        window.addEventListener('pageshow', function () {
             window.scrollTo({ top: 0, behavior: 'instant' });
         });
     </script>
@@ -57,7 +57,7 @@
 
 <body>
 
-    <header class="absolute top-0 left-0 w-full z-10 p-2.5 md:p-5 2xl:p-10 anek">
+    <header id="main-header" class="fixed top-0 left-0 w-full z-50 p-2.5 md:p-5 2xl:p-10 anek" style="transition: transform 0.4s ease-in-out;">
         <div class="wrapper">
             <div
                 class="bg-black w-full p-2 border border-[#2F2F38] rounded-1 hidden lg:flex items-center justify-between gap-6 relative">
@@ -75,6 +75,49 @@
                                         <path d="M17 9V11H15V13H13V15H11V13H9V11H7V9H17Z" fill="white" />
                                     </svg>
                                 </a>
+                                <div class="sub-menu-child">
+                                    <ul class="sub-menu !block">
+                                        <li>
+                                            <a href="">
+                                                <span class="icon">
+                                                    <img src="assets/images/sumenu.svg" alt="">
+                                                </span>
+                                                <span class="text">
+                                                    <span class="h-title">
+                                                        Gamifcation
+                                                    </span>
+                                                    <p>Lorem Ipsum is simply dummy text of the printing</p>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="">
+                                                <span class="icon">
+                                                    <img src="assets/images/sumenu.svg" alt="">
+                                                </span>
+                                                <span class="text">
+                                                    <span class="h-title">
+                                                        BFSI Solution
+                                                    </span>
+                                                    <p>Lorem Ipsum is simply dummy text of the printing</p>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="">
+                                                <span class="icon">
+                                                    <img src="assets/images/sumenu.svg" alt="">
+                                                </span>
+                                                <span class="text">
+                                                    <span class="h-title">
+                                                        Digital Solution
+                                                    </span>
+                                                    <p>Lorem Ipsum is simply dummy text of the printing</p>
+                                                </span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
                             <li>
                                 <a href="">
@@ -89,13 +132,58 @@
                                         <path d="M17 9V11H15V13H13V15H11V13H9V11H7V9H17Z" fill="white" />
                                     </svg>
                                 </a>
+                                <div class="sub-menu-child !left-[50%]" style="transform: translateX(-50%);">
+                                    <div class="sub-menu company flex gap-2">
+                                        <div class="grid grid-cols-3 gap-4 w-full max-w-143">
+                                            <div
+                                                class="item overflow rounded-1 relative p-2 hover:bg-[#FFFFFF14] max-w-45 w-full">
+                                                <a href="" class="absolute top-0 left-0 z-2 w-full h-full"></a>
+                                                <img src="assets/images/why.png"
+                                                    class="w-full object-cover aspect-square" alt="">
+                                                <div class="pt-3 pb-2 text-center anek font-medium">
+                                                    About us
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="item overflow rounded-1 relative p-2 hover:bg-[#FFFFFF14] max-w-45 w-full">
+                                                <a href="" class="absolute top-0 left-0 z-2 w-full h-full"></a>
+                                                <img src="assets/images/why.png"
+                                                    class="w-full object-cover aspect-square" alt="">
+                                                <div class="pt-3 pb-2 text-center anek font-medium">
+                                                    Career
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="item overflow rounded-1 relative p-2 hover:bg-[#FFFFFF14] max-w-45 w-full">
+                                                <a href="" class="absolute top-0 left-0 z-2 w-full h-full"></a>
+                                                <img src="assets/images/why.png"
+                                                    class="w-full object-cover aspect-square" alt="">
+                                                <div class="pt-3 pb-2 text-center anek font-medium">
+                                                    Blog
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="rigt flex flex-col justify-between pb-6 pl-6 text-[16px] border-l-[1px] border-[#FFFFFF26]">
+                                            <div class="opacity-65">CONTACT</div>
+                                            <div class="item">
+                                                <p>T: (+84) 868 217 954</p>
+                                                <p>(日本): 050 5539 3197</p>
+                                                <p>E: contact@triplayz.com</p>
+                                            </div>
+                                            <div class="item">
+                                                <p>3 Le Van Huu Street, Hai Ba Trung Ward, Hanoi, Vietnam</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </li>
                         </ul>
                     </div>
                 </div>
                 <div class="item h-full flex items-center justify-end">
                     <div class="flex items-center">
-                        <div class="translate btn-head-menu">
+                        <div class="translate btn-head-menu relative">
                             <a href="">
                                 <img src="assets/images/eng.png" alt="">
                                 <span>English</span>
@@ -104,6 +192,22 @@
                                     <path d="M17 9V11H15V13H13V15H11V13H9V11H7V9H17Z" fill="white" />
                                 </svg>
                             </a>
+                            <div class="sub-menu-child anek text-[16px]">
+                                <ul class="sub-menu !block text-left">
+                                    <li>
+                                        <a href="">
+                                            <img src="assets/images/eng.png" alt="">
+                                            <span>日本語 (Japanese)</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="">
+                                            <img src="assets/images/eng.png" alt="">
+                                            <span>Tiếng Việt (Vietnamese)</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                         <div class="head-contact btn-head-menu">
                             <a href="" class="bg-[#5643DD]">Contact Us</a>
