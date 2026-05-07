@@ -8,9 +8,9 @@
                     Ready to Bring Your <br>Vision to Life?
                 </div>
                 <ul class="block md:flex items-center gap-4 lg:gap-10 anek">
-                    <li class="mb-4 last:mb-0"><a href="">© 2026 TriPlayZ</a></li>
-                    <li class="mb-4 last:mb-0"><a href="">Terms & Conditions</a></li>
-                    <li class="mb-4 last:mb-0"><a href="">Privacy Policy</a></li>
+                    <li class="other-info mb-4 last:mb-0"><a href="">© 2026 TriPlayZ</a></li>
+                    <li class="other-info mb-4 last:mb-0"><a href="">Terms & Conditions</a></li>
+                    <li class="other-info mb-4 last:mb-0"><a href="">Privacy Policy</a></li>
                 </ul>
             </div>
             <div class="item col-span-12 md:col-span-6 3xl:col-span-5 anek relative flex flex-col justify-between order-1 md:order-2">

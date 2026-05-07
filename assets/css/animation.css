@@ -614,14 +614,25 @@ footer {
   text-align: start;
 }
 
-/* ── Wipe line — fixed để tính đúng tọa độ viewport ── */
 #srv-wipe-line {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: hsla(201, 100%, 80%, 1);
-  z-index: 30;
-  pointer-events: none;
-  opacity: 0;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: hsla(201, 100%, 80%, 1);
+    z-index: 30;
+    pointer-events: none;
+    opacity: 0;
+}
+
+
+/* ==================== */
+/* FOOTER */
+/* ==================== */
+
+.other-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
 }
