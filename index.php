@@ -38,7 +38,7 @@
 </div>
 <main>
     <section class="relative overflow-hidden">
-        <div class="gradient-canvas hidden lg:block"></div>
+        <div class="gradient-canvas lg:block"></div>
 
         <div class="wrapper p-6 md:p-10 min-h-[unset] md:min-h-[100vh] relative">
             <div
@@ -122,9 +122,8 @@
 
     <section id="service" class="py-10 md:py-20 lg:py-25 3xl:py-50 px-6 md:px-10 relative overflow-hidden relative">
         <div class="wrapper relative">
-            <!-- <img class="srv-bg" src="./assets/images/asci.png" alt=""> -->
             <div class="absolute top-0 right-0 pointer-events-none">
-                <img src="assets/images/asci.png" alt="">
+                <img class="srv-bg" src="assets/images/asci.png" alt="">
             </div>
             <div class="block lg:flex mb-6 md:mb-20 gap-50 relative z-2">
                 <div class="item anek font-medium opacity-65 pt-0 lg:pt-10 mb-6 lg:mb-0">/SERVICES</div>
@@ -477,7 +476,7 @@
 
     <section class="py-20 lg:py-25 px-10 relative overflow-hidden hidden md:block wrapper form-parallax-sec">
         <img src="assets/images/bn-form.jpg" class="w-full h-full absolute object-cover top-0 left-0 form-parallax-img"
-            alt="" style="transform: scale(1.2);">
+            alt="" style="transform: scale(1.1);">
         <div class="grid grid-cols-12 gap-10 relative z-2">
             <div class="item item col-span-12 lg:col-span-6 2xl:col-span-7 h-full flex items-center">
                 <div class="title-animation text-[48px] lg:text-[64px] 3xl:text-[80px] font-medium">Get a free
