@@ -233,7 +233,6 @@
                     </div>
                 </div>
 
-                <!-- Mobile: giữ nguyên -->
                 <div class="grid md:hidden grid-cols-1 gap-6">
                     <?php for ($x = 1; $x <= 3; $x++) { ?>
                         <div class="item relative border-b border-[#FFFFFF26] pb-8">
@@ -313,10 +312,10 @@
                                     </div>
                                     <div class="desc">
                                         <div
-                                            class="font-medium text-[48px] xl:text-[80px] 2xl:text-[112px] 3xl:text-[142px]">
+                                            class="title-animation font-medium text-[48px] xl:text-[80px] 2xl:text-[112px] 3xl:text-[142px]">
                                             <?php echo $numbers[$x - 1]; ?>
                                         </div>
-                                        <div class="anek text-5 xl:text-6"><?php echo $texts[$x - 1]; ?></div>
+                                        <div class="text-animation anek text-5 xl:text-6"><?php echo $texts[$x - 1]; ?></div>
                                     </div>
                                 </div>
                             <?php } ?>
