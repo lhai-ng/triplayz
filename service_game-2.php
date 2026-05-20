@@ -511,12 +511,12 @@
                                     <span class="opacity-25">/03</span>
                                 </div>
                                 <div class="btn-main">
-                                    <a href="" style="border: 1px solid #1D1D2714; background: #1D1D2714;">
+                                    <a href="" class="highlight-btn" style="border: 1px solid #1D1D2714; background: #1D1D2714;">
                                         MORE PROJECTS
-                                        <span class="dot !bg-[#1D1D27]"></span>
-                                        <span class="dot !bg-[#1D1D27]"></span>
-                                        <span class="dot !bg-[#1D1D27]"></span>
-                                        <span class="dot !bg-[#1D1D27]"></span>
+                                        <span class="dot"></span>
+                                        <span class="dot"></span>
+                                        <span class="dot"></span>
+                                        <span class="dot"></span>
                                     </a>
                                 </div>
                             </div>

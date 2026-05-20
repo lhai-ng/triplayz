@@ -199,6 +199,10 @@ footer {
   gap: 10px;
 }
 
+.highlight-btn .button-white .dot {
+  background-color: #1D1D27 !important;
+}
+
 .button-purple .dot {
   background-color: #fff !important;
 }
