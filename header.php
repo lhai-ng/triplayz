@@ -55,7 +55,7 @@
         style="transition: transform 0.4s ease-in-out;">
         <div class="wrapper">
             <div
-                class="bg-[#1D1D27A6] w-full p-2 border border-[#2F2F38] rounded-1 hidden lg:flex items-center justify-between gap-6 relative">
+                class="bg-[#1D1D27A6] w-full p-2 border border-[#2F2F38] rounded-1 hidden lg:flex items-center justify-between gap-6 relative" style="backdrop-filter: blur(56px);">
                 <div class="item h-full flex items-center">
                     <a href="index.php"><img src="assets/images/logo.svg" alt=""></a>
                 </div>
@@ -129,7 +129,7 @@
                                 </a>
                                 <div class="sub-menu-child !left-[50%]" style="transform: translateX(-50%);">
                                     <div class="sub-menu company flex gap-2">
-                                        <div class="grid grid-cols-3 gap-4 w-full max-w-143">
+                                        <div class="grid grid-cols-4 gap-4 w-full max-w-192">
                                             <div
                                                 class="item overflow rounded-1 relative p-2 hover:bg-[#FFFFFF14] max-w-45 w-full">
                                                 <a href="about.php" class="absolute top-0 left-0 z-2 w-full h-full"></a>
@@ -156,6 +156,15 @@
                                                     class="w-full object-cover aspect-square" alt="">
                                                 <div class="pt-3 pb-2 text-center anek font-medium">
                                                     Blog
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="item overflow rounded-1 relative p-2 hover:bg-[#FFFFFF14] max-w-45 w-full">
+                                                <a href="faq.php" class="absolute top-0 left-0 z-2 w-full h-full"></a>
+                                                <img src="assets/images/why.png"
+                                                    class="w-full object-cover aspect-square" alt="">
+                                                <div class="pt-3 pb-2 text-center anek font-medium">
+                                                    FAQ
                                                 </div>
                                             </div>
                                         </div>
@@ -212,7 +221,7 @@
                 </div>
             </div>
 
-            <div class="bg-black w-full p-4 flex items-center justify-between rounded-1 block lg:hidden">
+            <div class="bg-[#1D1D27A6] w-full p-4 flex items-center justify-between rounded-1 block lg:hidden" style="backdrop-filter: blur(56px);">
                 <div class="logo">
                     <a href=""><img src="assets/images/logo.svg" class="h-8" alt=""></a>
                 </div>
@@ -231,7 +240,7 @@
 
     <div
         class="nav-menu text-[32px] font-medium block lg:hidden bg-[#1D1D27] fixed top-0 w-full md:w-[375px] h-full z-[100] p-4 no-scrollbar overflow-y-scroll">
-        <div class="flex rounded-1 border border-[#2F2F38] p-4 items-center justify-between mb-8 md:mb-16">
+        <div class="bg-[#1D1D27A6] flex rounded-1 border border-[#2F2F38] p-4 items-center justify-between mb-8 md:mb-16 sticky top-0 left-0 z-2" style="backdrop-filter: blur(56px);">
             <div class="logo">
                 <a href="index.php"><img src="assets/images/logo.svg" alt=""></a>
             </div>
@@ -281,6 +290,7 @@
                         <li><a href="about.php">About us</a></li>
                         <li><a href="career.php">Career</a></li>
                         <li><a href="blog.php">Blog</a></li>
+                        <li><a href="faq.php">FAQ</a></li>
                     </ul>
                 </li>
                 <li><a href="contact.php">Contact</a></li>

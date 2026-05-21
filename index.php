@@ -27,7 +27,7 @@
                                 across industries engage customers and grow sustainably
                             </div>
                             <div class="clutch item px-6 md:px-0">
-                                <img src="assets/images/clutch.png" class="max-w-69 2xl:max-w-[auto] w-full" alt="">
+                                <img src="assets/images/clutch.svg" class="max-w-69 2xl:max-w-[auto] w-full" alt="">
                             </div>
                         </div>
                     </div>

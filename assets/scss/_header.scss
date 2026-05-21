@@ -50,8 +50,11 @@
   width: 586px;
 
   &.company {
-    padding: 16px;
-    width: 870px;
+    padding: 16px; 
+    width: 1068px; 
+    @media (max-width: 1200px) {
+      width: 1000px;
+    }
   }
 
   li {

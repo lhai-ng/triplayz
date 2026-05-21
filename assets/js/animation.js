@@ -6110,3 +6110,17 @@ PageAnimations.register(initContactButtonAnimation);
 
 
 PageAnimations.runAll();
+
+// Global Accordion Event Delegation
+if (typeof jQuery !== 'undefined') {
+  $(document).on('click', '.accordion-header', function () {
+    const $this = $(this);
+    const $content = $this.next('.accordion-content');
+
+    // Toggle open state for styling
+    $this.toggleClass('is-open');
+
+    // Hiệu ứng slide toggle mượt mà
+    $content.slideToggle(300);
+  });
+}

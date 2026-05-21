@@ -2,49 +2,7 @@
 <div data-barba="wrapper">
     <div data-barba="container" data-barba-namespace="blog">
         <main>
-            <!-- Hero Section -->
-            <section
-                class="relative flex justify-end flex-col bg-cover bg-center bg-no-repeat h-[432px] md:h-[450px] 2xl:h-[650px] px-2.5 py-6 md:p-5 2xl:p-10">
-                <div class="no-logo-canvas lg:block"></div>
-                <div class="wrapper relative z-3">
-                    <div
-                        class="flex flex-col-reverse gap-[16px] justify-end lg:gap-[40px] flex-col lg:flex-row lg:items-center">
-                        <div class="text-animation anek text-[16px] min-[1200px]:text-[20px] max-w-[219px] leading-[1.25]">
-                            Grow your career as we grow. Join the team that's changing IT services
-                        </div>
-                        <h1 class="title-animation text-[56px] md:text-[80px] 2xl:text-[100px] 3xl:text-[124px] font-medium leading-[1.25]">
-                            Start Your Journey
-                        </h1>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Main Image -->
-            <section class="relative px-0 md:px-10 pb-0 md:pb-6 bg-[#1D1D27] avarta-paralax">
-                <div class="wrapper overflow-hidden">
-                    <img src="assets/images/carr.png" class="w-full parallax-img" alt="Team" style="transform: scale(1.15);">
-                </div>
-            </section>
-
-            <!-- Intro Section -->
-            <section class="py-6 md:py-10 md:py-5 px-4 md:px-10 bg-[#1D1D27] text-white">
-                <div class="wrapper">
-                    <div class="flex flex-col lg:flex-row items-center justify-between gap-4 md:gap-6 lg:gap-20">
-                        <div class="w-full">
-                            <h2 class="title-animation text-5 md:text-12 2xl:text-16 3xl:text-20 font-medium leading-tight max-w-[833px]">
-                                More Than a Workplace. <br>A Place to Grow.
-                            </h2>
-                        </div>
-                        <div class="flex items-center max-w-full lg:max-w-[500px]">
-                            <p class="text-animation anek text-4 md:text-5 leading-relaxed  opacity-85">
-                                At Triplayz, we believe the best products are built by people who are empowered to think boldly,
-                                collaborate openly, and take pride in their craft. We're a global team united by a shared
-                                passion for innovation — and a commitment to growing together, every step of the way.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <section class="pt-20"></section>
 
             <!-- Job Opportunities Section -->
             <section class="py-10 md:py-24 px-4 md:px-10 bg-[#1D1D27] text-white">

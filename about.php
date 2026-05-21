@@ -247,24 +247,17 @@
                         </div>
                     </div>
                     <div class="hidden md:block">
-                        <!-- <img src="assets/images/rotate.png" alt=""> -->
 
                         <div class="outer relative" id="outer">
                             <div class="absolute left-0 top-0 h-full flex items-center px-10">
-                                <span class="relative top-10">09.2023 - 06.2024</span>
+                                <span class="relative top-10"></span>
                             </div>
                             <div class="scroll-track">
                                 <div class="sticky-frame" id="frame"></div>
                             </div>
 
                             <div class="absolute top-0 right-0 px-10 h-full hidden lg:flex items-center">
-                                <div class="max-w-[24vw] xl:max-w-110 w-full anek opacity-85">
-                                    Triplayz was founded by a team with deep expertise in Gamification and Fintech.From
-                                    day one,
-                                    we positioned ourselves as a new-generation tech partner. Experience-driven thinking
-                                    and
-                                    execution quality guide everything we build.
-                                </div>
+                                <div class="max-w-[24vw] xl:max-w-110 w-full anek opacity-85"></div>
                             </div>
                         </div>
 
@@ -633,12 +626,12 @@
                                 </div>
                                 <div class="item">
                                     <div class="btn-main">
-                                        <a href="" class="highlight-btn" style="border: 1px solid #1D1D2714; background: #1D1D2714;">
+                                        <a href="" style="border: 1px solid #1D1D2714; background: #1D1D2714;">
                                             SUBMIT NOW
-                                            <span class="dot"></span>
-                                            <span class="dot"></span>
-                                            <span class="dot"></span>
-                                            <span class="dot"></span>
+                                            <span class="dot !bg-[#1D1D27]"></span>
+                                            <span class="dot !bg-[#1D1D27]"></span>
+                                            <span class="dot !bg-[#1D1D27]"></span>
+                                            <span class="dot !bg-[#1D1D27]"></span>
                                         </a>
                                     </div>
                                 </div>

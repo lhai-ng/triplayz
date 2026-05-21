@@ -305,11 +305,6 @@ body img {
   padding: 16px;
   width: 1068px;
 }
-@media (max-width: 1200px) {
-  .sub-menu.company {
-    width: 1000px;
-  }
-}
 .sub-menu li {
   margin-bottom: 8px;
 }
@@ -734,4 +729,4 @@ body img {
   }
 }
 
-/*# sourceMappingURL=style.css.map */
+/*# sourceMappingURL=stylr.css.map */
