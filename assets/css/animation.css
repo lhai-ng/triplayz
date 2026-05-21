@@ -655,8 +655,7 @@ ma #company-globe-msg {
 
 .srv-tag {
   font-family: "Anek Latin", monospace;
-  padding: 7px 14px;
-  border: 1px solid #1e2a40;
+  padding: 16px 20px;
   border-radius: 2px;
   font-size: clamp(16px, 1vw, 20px);
   color: #fff;
