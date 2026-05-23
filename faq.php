@@ -2,7 +2,29 @@
 <div data-barba="wrapper">
     <div data-barba="container" data-barba-namespace="blog">
         <main>
-            <section class="pt-20"></section>
+            <!-- Hero Section -->
+            <section
+                class="relative flex justify-end flex-col bg-cover bg-center bg-no-repeat h-[432px] md:h-[450px] 2xl:h-[650px] px-2.5 py-6 md:p-5 2xl:p-10">
+                <div class="no-logo-canvas lg:block"></div>
+                <div class="wrapper relative z-3">
+                    <div
+                        class="flex flex-col-reverse gap-[16px] justify-end lg:gap-[40px] flex-col lg:flex-row lg:items-center">
+                        <div class="text-animation anek text-[16px] min-[1200px]:text-[20px] max-w-[219px] leading-[1.25]">
+                            Grow your career as we grow. Join the team that's changing IT services
+                        </div>
+                        <h1 class="title-animation text-[56px] md:text-[80px] 2xl:text-[100px] 3xl:text-[124px] font-medium leading-[1.25]">
+                            Answer your ques
+                        </h1>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main Image -->
+            <section class="relative px-0 md:px-10 pb-0 md:pb-6 bg-[#1D1D27] avarta-paralax">
+                <div class="wrapper overflow-hidden">
+                    <img src="assets/images/carr.png" class="w-full parallax-img" alt="Team" style="transform: scale(1.15);">
+                </div>
+            </section>
 
             <!-- Job Opportunities Section -->
             <section class="py-10 md:py-24 px-4 md:px-10 bg-[#1D1D27] text-white">
