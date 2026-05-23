@@ -5602,21 +5602,21 @@ function initMosaicAndPixelReveal() {
 
   const CELL_COLOR = "#1d1d27";
 
-
   const MOSAIC_SCROLL_MULTIPLIER = 4.2;
 
-  // overlay chạy chậm hơn
-  const OVERLAY_DELAY = 0.1;
+  // ── MỚI ──────────────────────────────────────────────────
+  // Số viewport-height pin thêm sau khi mosaic animation hoàn tất.
+  // 0 = thoát pin ngay, 1 = pin thêm 1 màn hình, 1.5 = pin thêm 1.5 màn hình…
+  const MOSAIC_DWELL_VH = 1;
+  // ─────────────────────────────────────────────────────────
 
-  // fade mềm hơn
+  const OVERLAY_DELAY = 0.1;
   const FADE_RANGE = 0.18;
 
   function getFadeOpacity(progress, threshold, range = FADE_RANGE) {
     const start = Math.max(0, threshold - range);
-
     if (progress <= start) return 0;
     if (progress >= threshold) return 1;
-
     return (progress - start) / (threshold - start);
   }
 
@@ -5641,7 +5641,6 @@ function initMosaicAndPixelReveal() {
   for (let row = 0; row < ROWS; row++) {
     for (let col = 0; col < COLS; col++) {
       const cell = document.createElement("div");
-
       cell.style.cssText = `
         background:${CELL_COLOR};
         opacity:0;
@@ -5649,7 +5648,6 @@ function initMosaicAndPixelReveal() {
         height:100%;
         will-change:opacity;
       `;
-
       overlay.appendChild(cell);
       overlayCells.push({ el: cell, row });
     }
@@ -5669,12 +5667,6 @@ function initMosaicAndPixelReveal() {
     }));
 
   // ========================================================
-  // MOBILE
-  // ========================================================
-
-  // Removed mobile early return so the mosaic animation works on all screen sizes.
-
-  // ========================================================
   // STICKY
   // ========================================================
 
@@ -5682,7 +5674,8 @@ function initMosaicAndPixelReveal() {
 
   Object.assign(scrollWrapper.style, {
     position: "relative",
-    height: `calc(100vh * ${MOSAIC_SCROLL_MULTIPLIER})`,
+    // ── MỚI: cộng thêm MOSAIC_DWELL_VH vào tổng chiều cao ──
+    height: `calc(100vh * ${MOSAIC_SCROLL_MULTIPLIER + MOSAIC_DWELL_VH})`,
   });
 
   section.parentNode.insertBefore(scrollWrapper, section);
@@ -5703,11 +5696,9 @@ function initMosaicAndPixelReveal() {
   let containerShown = false;
 
   const missionImgEl = section.querySelector(".mission-img");
-
   const missionContainer = section.querySelector(
     ".mission-wrapper .mission-container",
   );
-
   const missionWrapper = section.querySelector(".mission-wrapper");
 
   let mosaicGrid = null;
@@ -5722,7 +5713,6 @@ function initMosaicAndPixelReveal() {
 
     mosaicGrid = document.createElement("div");
     mosaicGrid.className = "mosaic-grid";
-
     (missionWrapper || section).appendChild(mosaicGrid);
 
     function buildMosaicCells() {
@@ -5731,25 +5721,20 @@ function initMosaicAndPixelReveal() {
 
       const W = section.offsetWidth;
       const H = section.offsetHeight;
-
       if (!W || !H) return;
 
       const nW = missionImgEl.naturalWidth;
       const nH = missionImgEl.naturalHeight;
-
       if (!nW || !nH) return;
 
       const scale = Math.max(W / nW, H / nH);
-
       const rW = nW * scale;
       const rH = nH * scale;
-
       const ox = (W - rW) / 2;
       const oy = (H - rH) / 2;
 
       const cellW = W / COLS;
       const cellH = H / ROWS;
-
       const bgW = ((rW / cellW) * 100).toFixed(4);
       const bgH = ((rH / cellH) * 100).toFixed(4);
 
@@ -5758,45 +5743,31 @@ function initMosaicAndPixelReveal() {
       for (let row = 0; row < ROWS; row++) {
         for (let col = 0; col < COLS; col++) {
           const el = document.createElement("div");
-
           el.className = "mosaic-cell";
 
-          // overlap nhẹ để tránh seam
           const overlap = 1;
-
           const x = col * cellW;
           const y = row * cellH;
-
           const bpx = ox - x;
           const bpy = oy - y;
 
           el.style.cssText = `
             position:absolute;
-
             left:${x - overlap / 2}px;
             top:${y - overlap / 2}px;
-
             width:${cellW + overlap}px;
             height:${cellH + overlap}px;
-
             opacity:0;
             will-change:opacity;
-
             background-image:url(${missionImgEl.src});
-
-            /* scale nhẹ hơn để che line */
             background-size:${rW + 2}px ${rH + 2}px;
-
             background-position:${bpx - 1}px ${bpy - 1}px;
-
             background-repeat:no-repeat;
-
             backface-visibility:hidden;
             transform:translateZ(0);
           `;
 
           mosaicGrid.appendChild(el);
-
           cells.push({ el, row });
         }
       }
@@ -5816,9 +5787,7 @@ function initMosaicAndPixelReveal() {
     if (missionImgEl.complete && missionImgEl.naturalWidth > 0) {
       buildMosaicCells();
     } else {
-      missionImgEl.addEventListener("load", buildMosaicCells, {
-        once: true,
-      });
+      missionImgEl.addEventListener("load", buildMosaicCells, { once: true });
     }
 
     window.addEventListener("resize", () => {
@@ -5834,30 +5803,27 @@ function initMosaicAndPixelReveal() {
   function getMosaicProgress() {
     const rect = scrollWrapper.getBoundingClientRect();
 
-    const total = scrollWrapper.offsetHeight - window.innerHeight;
+    // ── MỚI ──────────────────────────────────────────────────
+    // Chỉ map 0→1 trên phần animation, bỏ qua phần dwell ở cuối.
+    // animationScroll = chiều cao scroll wrapper thuần animation (không có dwell)
+    //                 = 100vh * MOSAIC_SCROLL_MULTIPLIER - 100vh (trừ 1vh vì section cao 100vh)
+    const animationScroll = window.innerHeight * (MOSAIC_SCROLL_MULTIPLIER - 1);
+    // ─────────────────────────────────────────────────────────
 
-    return Math.max(0, Math.min(1, -rect.top / total));
+    return Math.max(0, Math.min(1, -rect.top / animationScroll));
   }
 
   function getOverlayProgress() {
     const rect = section.getBoundingClientRect();
-
-    // trigger muộn hơn
     const triggerPoint = window.innerHeight * 0.75;
 
-    if (rect.bottom > triggerPoint) {
-      return 0;
-    }
+    if (rect.bottom > triggerPoint) return 0;
 
     const distance = triggerPoint - rect.bottom;
-
-    // overlay complete chậm hơn
     const maxDistance = window.innerHeight * 1.3;
 
     let p = distance / maxDistance;
-
     p = Math.max(0, Math.min(1, p));
-
     p = Math.max(0, (p - OVERLAY_DELAY) / (1 - OVERLAY_DELAY));
 
     return p;
@@ -5877,7 +5843,6 @@ function initMosaicAndPixelReveal() {
 
       if (mp >= 0.9 && !containerShown && missionContainer) {
         containerShown = true;
-
         gsap.to(missionContainer, {
           opacity: 1,
           duration: 0.6,
@@ -5885,16 +5850,11 @@ function initMosaicAndPixelReveal() {
         });
       } else if (mp < 0.8 && containerShown && missionContainer) {
         containerShown = false;
-
-        gsap.to(missionContainer, {
-          opacity: 0,
-          duration: 0.3,
-        });
+        gsap.to(missionContainer, { opacity: 0, duration: 0.3 });
       }
     }
 
     const op = getOverlayProgress();
-
     sortedOverlay.forEach((c) => {
       c.el.style.opacity = getFadeOpacity(op, c.threshold);
     });
@@ -5910,9 +5870,7 @@ function initMosaicAndPixelReveal() {
     "scroll",
     () => {
       if (_rafPending) return;
-
       _rafPending = true;
-
       requestAnimationFrame(() => {
         onScroll();
         _rafPending = false;
@@ -5923,7 +5881,6 @@ function initMosaicAndPixelReveal() {
 
   onScroll();
 }
-
 
 
 
