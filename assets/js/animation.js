@@ -1,4 +1,35 @@
+if (typeof isFromLinkTransition === "undefined") {
+  function isFromLinkTransition() {
+    const navEntry = performance.getEntriesByType("navigation")[0];
+    const navType = navEntry
+      ? navEntry.type
+      : performance.navigation?.type === 0
+        ? "navigate"
+        : "reload";
+
+    if (navType === "reload" || navType === "back_forward") return false;
+    if (!document.referrer) return false;
+    try {
+      return new URL(document.referrer).origin === location.origin;
+    } catch (_) {
+      return false;
+    }
+  }
+}
+
 function initPreloaderTextAnimation() {
+  const fromTransition = isFromLinkTransition();
+  
+  if (fromTransition) {
+    const loaderIcon = document.getElementById("loader-icon");
+    if (loaderIcon) loaderIcon.style.display = "none";
+
+    document.body.style.overflowY = "";
+    document.documentElement.style.overflowY = "";
+    window._preloaderDone = true;
+    return;
+  }
+
   if (window.lottieAnim) {
     window.lottieAnim.destroy();
     window.lottieAnim = null;
@@ -1379,10 +1410,12 @@ function initPreloaderTextAnimation() {
   };
 
   const ring = document.getElementById("ring");
+  const ringSvg = document.querySelector(".ring-svg");
   const loaderIcon = document.getElementById("loader-icon");
   const columns = document.querySelectorAll("#preloader .column");
 
-  if (!ring || !loaderIcon || !columns.length) return;
+  if (!ring || !loaderIcon || !ringSvg || !columns.length) return;
+  gsap.set(ringSvg, { display: "block" });
 
   if (window._preloaderDone) {
     document.querySelectorAll(".hero-intro, .hero-title").forEach((el) => {
@@ -1517,7 +1550,7 @@ function initPreloaderTextAnimation() {
     "<0.1",
   );
 }
-PageAnimations.register(initPreloaderTextAnimation);
+initPreloaderTextAnimation();
 
 function initCustomScrollbar() {
   if (window._initCustomScrollbar) return;
@@ -1679,7 +1712,7 @@ function initCustomScrollbar() {
 
   updateThumb();
 }
-PageAnimations.register(initCustomScrollbar);
+initCustomScrollbar();
 
 function initHeaderAnimation() {
   if (window._initHeaderAnimation) return;
@@ -1834,12 +1867,18 @@ function initHeaderAnimation() {
       setupTrigger(trigger, arrow, subMenu, translateBtn); // container = div.btn-head-menu
   }
 }
-PageAnimations.register(initHeaderAnimation);
+initHeaderAnimation();
 
 function initVisionShapeAnimation() {
   const scrollTrig = document.getElementById("vision-scroll-trigger");
   const section = document.getElementById("vision-pinned-section");
-  if (!scrollTrig || !section || typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
+  if (
+    !scrollTrig ||
+    !section ||
+    typeof gsap === "undefined" ||
+    typeof ScrollTrigger === "undefined"
+  )
+    return;
 
   const logoTop = section.querySelector(".logo-top img");
   const logoBottom = section.querySelector(".logo-bottom img");
@@ -1889,10 +1928,10 @@ function initVisionShapeAnimation() {
       const pct = t * 100;
       textVision.style.backgroundImage = `linear-gradient(to left, ${VIVID} ${pct}%, ${MUTED} ${pct}%)`;
       textShape.style.backgroundImage = `linear-gradient(to right, ${VIVID} ${pct}%, ${MUTED} ${pct}%)`;
-    }
+    },
   });
 }
-PageAnimations.register(initVisionShapeAnimation);
+initVisionShapeAnimation();
 
 function initButtonAnimation() {
   function wrapButtonContent() {
@@ -1987,7 +2026,7 @@ function initButtonAnimation() {
 
   wrapButtonContent();
 }
-PageAnimations.register(initButtonAnimation);
+initButtonAnimation();
 
 function initPixelatedHomeShader() {
   const wrapper = document.querySelector(".gradient-canvas");
@@ -1996,13 +2035,13 @@ function initPixelatedHomeShader() {
   const config = {
     color1: "#766FF6",
     pixelGap: 0.18,
-    marginLeft: 120,   // desktop left margin in CSS px
+    marginLeft: 120, // desktop left margin in CSS px
     centerY: 0.5,
   };
 
   // ── Responsive pixel-size helpers ──────────────────────────────────────────
   const BASE_SCREEN_WIDTH = 1520;
-  const BASE_PIXEL_CSS_PX = 14.0;   // pixel size (CSS px) at 1520 px screen
+  const BASE_PIXEL_CSS_PX = 14.0; // pixel size (CSS px) at 1520 px screen
   const DPR = Math.min(window.devicePixelRatio, 2);
   const MIN_PHYSICAL_PX = 18;
 
@@ -2016,36 +2055,126 @@ function initPixelatedHomeShader() {
 
   // ── Grid data ──────────────────────────────────────────────────────────────
   const PIXEL_GRID = [
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0],
-    [0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,1,1,0,0,0,0],
-    [0,0,0,1,1,1,1,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,1,1,1,1,1,0,0,0],
-    [0,0,0,0,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,1,0,0,0,0],
-    [0,0,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,0,0],
-    [0,0,0,0,0,0,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,1,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0],
-    [1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1],
-    [1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1],
-    [1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1],
-    [1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1],
-    [0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,1,0,0,0,0,0,0],
-    [0,0,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,0,0],
-    [0,0,0,0,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,1,0,0,0,0],
-    [0,0,0,1,1,1,1,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,1,1,1,1,1,0,0,0],
-    [0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,1,1,0,0,0,0],
-    [0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1,
+      0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1,
+      1, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1,
+      1, 1, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1,
+      1, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1,
+      0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0,
+      0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0,
+      0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0,
+      0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+    ],
+    [
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1,
+    ],
+    [
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1,
+    ],
+    [
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1,
+    ],
+    [
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1,
+      1, 1, 1, 1, 1,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0,
+      0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0,
+      0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0,
+      0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1,
+      0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1,
+      1, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1,
+      1, 1, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1,
+      1, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1,
+      0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+    ],
   ];
   const GRID_W = PIXEL_GRID[0].length;
   const GRID_H = PIXEL_GRID.length;
@@ -2078,7 +2207,11 @@ function initPixelatedHomeShader() {
 
   function trailGet(i) {
     const slot = (_trailHead - 1 - i + MAX_TRAIL * 2) % MAX_TRAIL;
-    return { x: _trailBuf[slot*3], y: _trailBuf[slot*3+1], time: _trailBuf[slot*3+2] };
+    return {
+      x: _trailBuf[slot * 3],
+      y: _trailBuf[slot * 3 + 1],
+      time: _trailBuf[slot * 3 + 2],
+    };
   }
 
   function sampleTrail(x, y) {
@@ -2087,9 +2220,9 @@ function initPixelatedHomeShader() {
       const last = trailGet(0);
       if (Math.hypot(x - last.x, y - last.y) < TRAIL_MIN_DIST) return;
     }
-    _trailBuf[_trailHead*3]   = x;
-    _trailBuf[_trailHead*3+1] = y;
-    _trailBuf[_trailHead*3+2] = now;
+    _trailBuf[_trailHead * 3] = x;
+    _trailBuf[_trailHead * 3 + 1] = y;
+    _trailBuf[_trailHead * 3 + 2] = now;
     _trailHead = (_trailHead + 1) % MAX_TRAIL;
     if (_trailLen < MAX_TRAIL) _trailLen++;
   }
@@ -2097,47 +2230,67 @@ function initPixelatedHomeShader() {
   const _velOut = { x: 0, y: 0 };
 
   function computeVelocity() {
-    if (_trailLen < 2) { _velOut.x = 0; _velOut.y = 0; return _velOut; }
+    if (_trailLen < 2) {
+      _velOut.x = 0;
+      _velOut.y = 0;
+      return _velOut;
+    }
     const n = Math.min(5, _trailLen);
-    let dx = 0, dy = 0, totalW = 0;
+    let dx = 0,
+      dy = 0,
+      totalW = 0;
     for (let i = 0; i < n - 1; i++) {
-      const a = trailGet(i), b = trailGet(i + 1);
+      const a = trailGet(i),
+        b = trailGet(i + 1);
       const w = 1.0 / (i + 1);
       dx += (a.x - b.x) * w;
       dy += (a.y - b.y) * w;
       totalW += w;
     }
-    if (totalW === 0) { _velOut.x = 0; _velOut.y = 0; return _velOut; }
-    dx /= totalW; dy /= totalW;
+    if (totalW === 0) {
+      _velOut.x = 0;
+      _velOut.y = 0;
+      return _velOut;
+    }
+    dx /= totalW;
+    dy /= totalW;
     const len = Math.hypot(dx, dy);
-    if (len < 0.0001) { _velOut.x = 0; _velOut.y = 0; return _velOut; }
-    _velOut.x = dx / len; _velOut.y = dy / len;
+    if (len < 0.0001) {
+      _velOut.x = 0;
+      _velOut.y = 0;
+      return _velOut;
+    }
+    _velOut.x = dx / len;
+    _velOut.y = dy / len;
     return _velOut;
   }
 
   function hexToRgb(hex) {
     return [
-      parseInt(hex.slice(1,3),16)/255,
-      parseInt(hex.slice(3,5),16)/255,
-      parseInt(hex.slice(5,7),16)/255,
+      parseInt(hex.slice(1, 3), 16) / 255,
+      parseInt(hex.slice(3, 5), 16) / 255,
+      parseInt(hex.slice(5, 7), 16) / 255,
     ];
   }
 
   function createFontAtlas(size) {
-    const chars = ["2","0","x","+","."];
+    const chars = ["2", "0", "x", "+", "."];
     const canvas = document.createElement("canvas");
-    canvas.width  = size * chars.length;
+    canvas.width = size * chars.length;
     canvas.height = size;
     const ctx = canvas.getContext("2d");
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.font = `bold ${Math.floor(size * 0.75)}px monospace`;
-    ctx.textAlign    = "center";
+    ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillStyle    = "#fff";
+    ctx.fillStyle = "#fff";
     for (let i = 0; i < chars.length; i++) {
-      const cx = i * size + size / 2, cy = size / 2;
+      const cx = i * size + size / 2,
+        cy = size / 2;
       if (chars[i] === ".") {
-        ctx.beginPath(); ctx.arc(cx, cy, size * 0.13, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath();
+        ctx.arc(cx, cy, size * 0.13, 0, Math.PI * 2);
+        ctx.fill();
       } else {
         ctx.fillText(chars[i], cx, cy);
       }
@@ -2356,7 +2509,11 @@ function initPixelatedHomeShader() {
 
   function createTrailTexture() {
     const tex = new THREE.DataTexture(
-      _trailTexData, MAX_TRAIL, 1, THREE.RGBAFormat, THREE.FloatType
+      _trailTexData,
+      MAX_TRAIL,
+      1,
+      THREE.RGBAFormat,
+      THREE.FloatType,
     );
     tex.minFilter = tex.magFilter = THREE.NearestFilter;
     return tex;
@@ -2373,13 +2530,16 @@ function initPixelatedHomeShader() {
       const base = i * 4;
       if (i < _trailLen) {
         const slot = (_trailHead - 1 - i + MAX_TRAIL * 2) % MAX_TRAIL;
-        _trailTexData[base]     = _trailBuf[slot*3]   / resW;
-        _trailTexData[base + 1] = _trailBuf[slot*3+1] / resH;
-        _trailTexData[base + 2] = (now - _trailBuf[slot*3+2]) / TRAIL_DURATION;
+        _trailTexData[base] = _trailBuf[slot * 3] / resW;
+        _trailTexData[base + 1] = _trailBuf[slot * 3 + 1] / resH;
+        _trailTexData[base + 2] =
+          (now - _trailBuf[slot * 3 + 2]) / TRAIL_DURATION;
         _trailTexData[base + 3] = 0.0;
       } else {
-        _trailTexData[base] = -1.0; _trailTexData[base+1] = -1.0;
-        _trailTexData[base+2] = 1.0; _trailTexData[base+3] = 0.0;
+        _trailTexData[base] = -1.0;
+        _trailTexData[base + 1] = -1.0;
+        _trailTexData[base + 2] = 1.0;
+        _trailTexData[base + 3] = 0.0;
       }
     }
     mat.uniforms.uTrailTex.value.needsUpdate = true;
@@ -2403,13 +2563,13 @@ function initPixelatedHomeShader() {
 
   renderer.setSize(_res.w, _res.h, false);
   renderer.setPixelRatio(1);
-  renderer.domElement.style.width  = "100%";
+  renderer.domElement.style.width = "100%";
   renderer.domElement.style.height = "100%";
   wrapper.appendChild(renderer.domElement);
 
   // Font atlas created at the BASE physical size so it always looks crisp
   const fontAtlas = createFontAtlas(Math.round(BASE_PIXEL_CSS_PX * DPR) * 4);
-  const gridTex   = createGridTexture(PIXEL_GRID, GRID_W, GRID_H);
+  const gridTex = createGridTexture(PIXEL_GRID, GRID_W, GRID_H);
   _trailTex = createTrailTexture();
 
   // ── CHANGED: responsive grid-center ───────────────────────────────────────
@@ -2428,28 +2588,34 @@ function initPixelatedHomeShader() {
 
   const material = new THREE.ShaderMaterial({
     uniforms: {
-      iTime:        { value: 0 },
-      iResolution:  { value: new THREE.Vector2(_res.w, _res.h) },
-      uColor1:      { value: new THREE.Vector3(...hexToRgb(config.color1)) },
-      uPixelSize:   { value: physicalPixelSize },   // ← driven by calcPhysicalPixelSize()
-      uPixelGap:    { value: config.pixelGap },
-      uFontAtlas:   { value: fontAtlas },
-      uMousePos:    { value: new THREE.Vector2(-9999, -9999) },
+      iTime: { value: 0 },
+      iResolution: { value: new THREE.Vector2(_res.w, _res.h) },
+      uColor1: { value: new THREE.Vector3(...hexToRgb(config.color1)) },
+      uPixelSize: { value: physicalPixelSize }, // ← driven by calcPhysicalPixelSize()
+      uPixelGap: { value: config.pixelGap },
+      uFontAtlas: { value: fontAtlas },
+      uMousePos: { value: new THREE.Vector2(-9999, -9999) },
       uMouseActive: { value: 0.0 },
-      uVelocity:    { value: new THREE.Vector2(0, 0) },
-      uTrailTex:    { value: _trailTex },
-      uTrailCount:  { value: 0 },
-      uGridTex:     { value: gridTex },
-      uGridDims:    { value: new THREE.Vector2(GRID_W, GRID_H) },
-      uGridCenter:  { value: getGridCenter() },
+      uVelocity: { value: new THREE.Vector2(0, 0) },
+      uTrailTex: { value: _trailTex },
+      uTrailCount: { value: 0 },
+      uGridTex: { value: gridTex },
+      uGridDims: { value: new THREE.Vector2(GRID_W, GRID_H) },
+      uGridCenter: { value: getGridCenter() },
       uBgTop: {
-        value: (() => { const c = new THREE.Color("#30286c"); return new THREE.Vector3(c.r,c.g,c.b); })(),
+        value: (() => {
+          const c = new THREE.Color("#30286c");
+          return new THREE.Vector3(c.r, c.g, c.b);
+        })(),
       },
       uBgBot: {
-        value: (() => { const c = new THREE.Color("#1c1c26"); return new THREE.Vector3(c.r,c.g,c.b); })(),
+        value: (() => {
+          const c = new THREE.Color("#1c1c26");
+          return new THREE.Vector3(c.r, c.g, c.b);
+        })(),
       },
       uRevealAge: { value: 0.0 },
-      uPulseAge:  { value: -1.0 },
+      uPulseAge: { value: -1.0 },
     },
     vertexShader,
     fragmentShader,
@@ -2470,7 +2636,10 @@ function initPixelatedHomeShader() {
     actualMouse.y = (_res.h / DPR - (e.clientY - rect.top)) * DPR;
     actualMouse.active = true;
     lastMoveTime = performance.now();
-    if (laggedMouse.x === -9999) { laggedMouse.x = actualMouse.x; laggedMouse.y = actualMouse.y; }
+    if (laggedMouse.x === -9999) {
+      laggedMouse.x = actualMouse.x;
+      laggedMouse.y = actualMouse.y;
+    }
     _dirty = true;
   });
 
@@ -2519,8 +2688,12 @@ function initPixelatedHomeShader() {
       value: 1.35,
       duration: 3,
       ease: "sine.out",
-      onUpdate: () => { _dirty = true; },
-      onComplete: () => { setTimeout(runPulseLoop, 100); },
+      onUpdate: () => {
+        _dirty = true;
+      },
+      onComplete: () => {
+        setTimeout(runPulseLoop, 100);
+      },
     });
   }
 
@@ -2529,19 +2702,25 @@ function initPixelatedHomeShader() {
       value: 1.35,
       duration: 1,
       ease: "power1.out",
-      onUpdate: () => { _dirty = true; },
-      onComplete: () => { setTimeout(runPulseLoop, 3000); },
+      onUpdate: () => {
+        _dirty = true;
+      },
+      onComplete: () => {
+        setTimeout(runPulseLoop, 3000);
+      },
     });
   };
 
   window.shaderSaveState = function () {
     window._shaderSavedState = {
       revealAge: material.uniforms.uRevealAge.value,
-      pulseAge:  material.uniforms.uPulseAge.value,
+      pulseAge: material.uniforms.uPulseAge.value,
     };
   };
 
-  window.shaderPause  = function () { _shaderPaused = true; };
+  window.shaderPause = function () {
+    _shaderPaused = true;
+  };
   window.shaderResume = function () {
     if (!_shaderPaused) return;
     _shaderPaused = false;
@@ -2553,11 +2732,11 @@ function initPixelatedHomeShader() {
 
   // ── CHANGED: resize recalculates physicalPixelSize ─────────────────────────
   window.addEventListener("resize", () => {
-    physicalPixelSize = calcPhysicalPixelSize();          // ← NEW
+    physicalPixelSize = calcPhysicalPixelSize(); // ← NEW
     updateRes();
     renderer.setSize(_res.w, _res.h, false);
     material.uniforms.iResolution.value.set(_res.w, _res.h);
-    material.uniforms.uPixelSize.value = physicalPixelSize;  // ← NEW
+    material.uniforms.uPixelSize.value = physicalPixelSize; // ← NEW
     material.uniforms.uGridCenter.value.copy(getGridCenter());
     _dirty = true;
   });
@@ -2565,7 +2744,7 @@ function initPixelatedHomeShader() {
   if (window._shaderSavedState) {
     const s = window._shaderSavedState;
     material.uniforms.uRevealAge.value = s.revealAge;
-    material.uniforms.uPulseAge.value  = s.pulseAge;
+    material.uniforms.uPulseAge.value = s.pulseAge;
     _dirty = true;
     if (s.revealAge >= 1.35) setTimeout(runPulseLoop, 500);
     window._shaderSavedState = null;
@@ -2575,18 +2754,17 @@ function initPixelatedHomeShader() {
     setTimeout(runPulseLoop, 500);
   }
 }
-PageAnimations.register(initPixelatedHomeShader);
-
+initPixelatedHomeShader();
 
 function initOtherPagesShader() {
   const wrapper = document.querySelector(".no-logo-canvas");
   if (!wrapper) return;
 
   // ── Responsive pixel-size helpers ──────────────────────────────────────────
-  const BASE_SCREEN_WIDTH  = 1520;
-  const BASE_PIXEL_CSS_PX  = 14.0;
-  const DPR                = Math.min(window.devicePixelRatio, 2);
-  const MIN_PHYSICAL_PX    = 18;
+  const BASE_SCREEN_WIDTH = 1520;
+  const BASE_PIXEL_CSS_PX = 14.0;
+  const DPR = Math.min(window.devicePixelRatio, 2);
+  const MIN_PHYSICAL_PX = 18;
 
   function calcPhysicalPixelSize() {
     const scale = window.innerWidth / BASE_SCREEN_WIDTH;
@@ -2599,8 +2777,8 @@ function initOtherPagesShader() {
   // ── Animation config ───────────────────────────────────────────────────────
   const ANIM_CONFIG = {
     concurrentDots: 8,
-    animSpeed:      0.05,
-    seqDuration:    1,
+    animSpeed: 0.05,
+    seqDuration: 1,
   };
 
   // ── Page configs ───────────────────────────────────────────────────────────
@@ -2620,121 +2798,358 @@ function initOtherPagesShader() {
   }
 
   const currentPage = getCurrentPage();
-  const pageConfig  = currentPage ? PAGE_CONFIGS[currentPage] : null;
+  const pageConfig = currentPage ? PAGE_CONFIGS[currentPage] : null;
 
   // ── Pixel grids (unchanged) ────────────────────────────────────────────────
   const PIXEL_GRID_CAREER = [
-    [0,0,0,0,0,0,1,1,1,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,1,1,1,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,1,1,1,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0],
-    [0,0,0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1],
-    [0,0,0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1],
-    [1,1,1,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1],
-    [1,1,1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1],
-    [1,1,1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1],
-    [1,1,1,0,0,1,1,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1],
-    [1,1,1,0,0,1,1,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1],
-    [1,1,1,0,0,1,1,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1],
-    [1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1],
-    [1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1],
-    [1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1],
-    [1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,1,1,1],
-    [1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,1,1,1],
-    [1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,1,1,1],
-    [1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1],
-    [1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1],
-    [0,0,0,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,0,0,0],
-    [0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
-    [0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
-    [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],
-    [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],
-    [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],
+    [
+      0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,
+      0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,
+      0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,
+      0,
+    ],
+    [
+      0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1,
+      1,
+    ],
+    [
+      0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1,
+      1,
+    ],
+    [
+      1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1,
+      1,
+    ],
+    [
+      1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+      1,
+    ],
+    [
+      1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+      1,
+    ],
+    [
+      1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1,
+      1,
+    ],
+    [
+      1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1,
+      1,
+    ],
+    [
+      1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1,
+      1,
+    ],
+    [
+      1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1,
+      1,
+    ],
+    [
+      1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1,
+      1,
+    ],
+    [
+      1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1,
+      1,
+    ],
+    [
+      1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0,
+    ],
+    [
+      1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1,
+      1,
+    ],
+    [
+      1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1,
+      1,
+    ],
+    [
+      1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1,
+      1,
+    ],
+    [
+      1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1,
+      1,
+    ],
+    [
+      1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1,
+      1,
+    ],
+    [
+      0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0,
+      0,
+    ],
+    [
+      0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0,
+      0,
+    ],
+    [
+      0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0,
+      0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,
+      0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,
+      0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,
+      0,
+    ],
   ];
 
   const PIXEL_GRID_OURSTORY = [
-    [0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0],
-    [0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0],
-    [0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0],
-    [0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
-    [0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
-    [0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
-    [0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
-    [0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
-    [0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
-    [0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
-    [1,1,1,0,0,0,0,0,1,1,1,0,0,0,1,1,1,0,0,0,1,1,1,0,0,0,0,0,1,1,1],
-    [1,1,1,0,0,0,0,0,1,1,1,0,0,0,1,1,1,0,0,0,1,1,1,0,0,0,0,0,1,1,1],
-    [1,1,1,0,0,0,0,0,1,1,1,0,0,0,1,1,1,0,0,0,1,1,1,0,0,0,0,0,1,1,1],
-    [0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
-    [0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
-    [0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
-    [0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
-    [0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
-    [0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
-    [0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
-    [0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0],
-    [0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0],
-    [0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0],
+    [
+      0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1,
+      0, 0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1,
+      0, 0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1,
+      0, 0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      1, 1, 1, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      1, 1, 1, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      1, 1, 1, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      1, 1, 1, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      1, 1, 1, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      1, 1, 1, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      1, 1, 1, 0, 0, 0,
+    ],
+    [
+      1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0,
+      0, 0, 0, 1, 1, 1,
+    ],
+    [
+      1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0,
+      0, 0, 0, 1, 1, 1,
+    ],
+    [
+      1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0,
+      0, 0, 0, 1, 1, 1,
+    ],
+    [
+      0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      1, 1, 1, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      1, 1, 1, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      1, 1, 1, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      1, 1, 1, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      1, 1, 1, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      1, 1, 1, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      1, 1, 1, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1,
+      0, 0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1,
+      0, 0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1,
+      0, 0, 0, 0, 0, 0,
+    ],
   ];
 
   const PIXEL_GRID_CONTACT = [
-    [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
-    [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
-    [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
-    [0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0],
-    [0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0],
-    [0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0],
-    [1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,1,1,1,0,0],
-    [1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,1,1,1,0,0],
-    [1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,1,1,1,0,0],
-    [1,1,1,0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,0,0,1,1,1,0,0],
-    [1,1,1,0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,0,0,1,1,1,0,0],
-    [1,1,1,0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,0,0,1,1,1,0,0],
-    [1,1,1,0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,0,0,1,1,1,0,0],
-    [1,1,1,0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,0,0,1,1,1,0,0],
-    [1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
-    [1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
-    [1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
-    [0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1],
-    [0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1],
-    [0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1],
-    [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
-    [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
-    [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
+    [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+    [0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+    [0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+    [1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
+    [1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
+    [1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
+    [1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
+    [1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
+    [1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
+    [1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
+    [1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
+    [1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+    [1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+    [1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+    [0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+    [0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+    [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
   ];
 
   const PIXEL_GRID_FAQ = [
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0],
-    [0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0],
-    [0,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,0],
-    [0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,0,0,0,0],
-    [0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,0,0,0,0],
-    [0,0,0,0,1,1,1,0,0,0,1,1,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,1,1,1,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0],
-    [1,1,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,1,1,1,1,1],
-    [1,1,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,1,1,1,1,1],
-    [1,1,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,1,1,1,1,1],
-    [0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ],
+    [
+      0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 1, 1, 1, 0,
+    ],
+    [
+      0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 1, 1, 1, 0,
+    ],
+    [
+      0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 1, 1, 1, 0,
+    ],
+    [
+      0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+      0, 0, 1, 1, 1, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+      0, 0, 1, 1, 1, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0,
+      0, 0, 1, 1, 1, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+      1, 1, 0, 0, 0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+      1, 1, 0, 0, 0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+      1, 1, 0, 0, 0, 0, 0, 0, 0,
+    ],
+    [
+      1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+      1, 1, 0, 0, 1, 1, 1, 1, 1,
+    ],
+    [
+      1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+      1, 1, 0, 0, 1, 1, 1, 1, 1,
+    ],
+    [
+      1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+      1, 1, 0, 0, 1, 1, 1, 1, 1,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+      1, 1, 0, 0, 0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+      1, 1, 0, 0, 0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ],
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ],
   ];
 
   const GRID_MAP = {
@@ -2744,25 +3159,31 @@ function initOtherPagesShader() {
     FAQ: { grid: PIXEL_GRID_FAQ, w: 34, h: 30 },
   };
 
-  const activeGridKey  = pageConfig ? pageConfig.grid : null;
+  const activeGridKey = pageConfig ? pageConfig.grid : null;
   const activeGridData = activeGridKey ? GRID_MAP[activeGridKey] : null;
 
   const totalShapeCells = activeGridData
     ? activeGridData.grid.flat().reduce((a, b) => a + b, 0)
     : 1;
-  const getAnimWindow = () => ANIM_CONFIG.concurrentDots / Math.max(1, totalShapeCells);
+  const getAnimWindow = () =>
+    ANIM_CONFIG.concurrentDots / Math.max(1, totalShapeCells);
 
   // ── Trail system ───────────────────────────────────────────────────────────
-  const MAX_TRAIL      = 24;
+  const MAX_TRAIL = 24;
   const TRAIL_DURATION = 400;
   const TRAIL_MIN_DIST = 3;
 
   const _trailBuf = new Float64Array(MAX_TRAIL * 3);
-  let _trailHead = 0, _trailLen = 0;
+  let _trailHead = 0,
+    _trailLen = 0;
 
   function trailGet(i) {
     const slot = (_trailHead - 1 - i + MAX_TRAIL * 2) % MAX_TRAIL;
-    return { x: _trailBuf[slot*3], y: _trailBuf[slot*3+1], time: _trailBuf[slot*3+2] };
+    return {
+      x: _trailBuf[slot * 3],
+      y: _trailBuf[slot * 3 + 1],
+      time: _trailBuf[slot * 3 + 2],
+    };
   }
 
   function sampleTrail(x, y) {
@@ -2771,9 +3192,9 @@ function initOtherPagesShader() {
       const last = trailGet(0);
       if (Math.hypot(x - last.x, y - last.y) < TRAIL_MIN_DIST) return;
     }
-    _trailBuf[_trailHead*3]   = x;
-    _trailBuf[_trailHead*3+1] = y;
-    _trailBuf[_trailHead*3+2] = now;
+    _trailBuf[_trailHead * 3] = x;
+    _trailBuf[_trailHead * 3 + 1] = y;
+    _trailBuf[_trailHead * 3 + 2] = now;
     _trailHead = (_trailHead + 1) % MAX_TRAIL;
     if (_trailLen < MAX_TRAIL) _trailLen++;
   }
@@ -2781,27 +3202,46 @@ function initOtherPagesShader() {
   const _velOut = { x: 0, y: 0 };
 
   function computeVelocity() {
-    if (_trailLen < 2) { _velOut.x = 0; _velOut.y = 0; return _velOut; }
-    const n = Math.min(5, _trailLen);
-    let dx = 0, dy = 0, totalW = 0;
-    for (let i = 0; i < n - 1; i++) {
-      const a = trailGet(i), b = trailGet(i + 1);
-      const w = 1.0 / (i + 1);
-      dx += (a.x - b.x) * w; dy += (a.y - b.y) * w; totalW += w;
+    if (_trailLen < 2) {
+      _velOut.x = 0;
+      _velOut.y = 0;
+      return _velOut;
     }
-    if (totalW === 0) { _velOut.x = 0; _velOut.y = 0; return _velOut; }
-    dx /= totalW; dy /= totalW;
+    const n = Math.min(5, _trailLen);
+    let dx = 0,
+      dy = 0,
+      totalW = 0;
+    for (let i = 0; i < n - 1; i++) {
+      const a = trailGet(i),
+        b = trailGet(i + 1);
+      const w = 1.0 / (i + 1);
+      dx += (a.x - b.x) * w;
+      dy += (a.y - b.y) * w;
+      totalW += w;
+    }
+    if (totalW === 0) {
+      _velOut.x = 0;
+      _velOut.y = 0;
+      return _velOut;
+    }
+    dx /= totalW;
+    dy /= totalW;
     const len = Math.hypot(dx, dy);
-    if (len < 0.0001) { _velOut.x = 0; _velOut.y = 0; return _velOut; }
-    _velOut.x = dx / len; _velOut.y = dy / len;
+    if (len < 0.0001) {
+      _velOut.x = 0;
+      _velOut.y = 0;
+      return _velOut;
+    }
+    _velOut.x = dx / len;
+    _velOut.y = dy / len;
     return _velOut;
   }
 
   function hexToRgb(hex) {
     return [
-      parseInt(hex.slice(1,3),16)/255,
-      parseInt(hex.slice(3,5),16)/255,
-      parseInt(hex.slice(5,7),16)/255,
+      parseInt(hex.slice(1, 3), 16) / 255,
+      parseInt(hex.slice(3, 5), 16) / 255,
+      parseInt(hex.slice(5, 7), 16) / 255,
     ];
   }
 
@@ -2811,7 +3251,8 @@ function initOtherPagesShader() {
       for (let col = 0; col < w; col++) {
         const v = grid[row][col] ? 255 : 0;
         const i = (row * w + col) * 4;
-        data[i] = data[i+1] = data[i+2] = v; data[i+3] = 255;
+        data[i] = data[i + 1] = data[i + 2] = v;
+        data[i + 3] = 255;
       }
     }
     const tex = new THREE.DataTexture(data, w, h, THREE.RGBAFormat);
@@ -2821,17 +3262,24 @@ function initOtherPagesShader() {
   }
 
   function createFontAtlas(size) {
-    const chars = ["2","0","x","+","."];
+    const chars = ["2", "0", "x", "+", "."];
     const canvas = document.createElement("canvas");
-    canvas.width = size * chars.length; canvas.height = size;
+    canvas.width = size * chars.length;
+    canvas.height = size;
     const ctx = canvas.getContext("2d");
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.font = `bold ${Math.floor(size * 0.75)}px monospace`;
-    ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillStyle = "#fff";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "#fff";
     for (let i = 0; i < chars.length; i++) {
-      const cx = i * size + size / 2, cy = size / 2;
-      if (chars[i] === ".") { ctx.beginPath(); ctx.arc(cx, cy, size*0.13, 0, Math.PI*2); ctx.fill(); }
-      else ctx.fillText(chars[i], cx, cy);
+      const cx = i * size + size / 2,
+        cy = size / 2;
+      if (chars[i] === ".") {
+        ctx.beginPath();
+        ctx.arc(cx, cy, size * 0.13, 0, Math.PI * 2);
+        ctx.fill();
+      } else ctx.fillText(chars[i], cx, cy);
     }
     const tex = new THREE.CanvasTexture(canvas);
     tex.minFilter = tex.magFilter = THREE.LinearFilter;
@@ -3016,8 +3464,13 @@ function initOtherPagesShader() {
   `;
 
   // ── Three.js setup ─────────────────────────────────────────────────────────
-  function getRect()       { return wrapper.getBoundingClientRect(); }
-  function getCanvasSize() { const r = getRect(); return { w: Math.round(r.width * DPR), h: Math.round(r.height * DPR) }; }
+  function getRect() {
+    return wrapper.getBoundingClientRect();
+  }
+  function getCanvasSize() {
+    const r = getRect();
+    return { w: Math.round(r.width * DPR), h: Math.round(r.height * DPR) };
+  }
 
   let _res = getCanvasSize();
 
@@ -3035,57 +3488,70 @@ function initOtherPagesShader() {
     );
   }
 
-  const camera   = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(_res.w, _res.h, false);
   renderer.setPixelRatio(1);
-  renderer.domElement.style.width  = "100%";
+  renderer.domElement.style.width = "100%";
   renderer.domElement.style.height = "100%";
   wrapper.appendChild(renderer.domElement);
 
   const fontAtlas = createFontAtlas(Math.round(BASE_PIXEL_CSS_PX * DPR) * 4);
 
-  let gridTex, GRID_W = 1, GRID_H = 1;
+  let gridTex,
+    GRID_W = 1,
+    GRID_H = 1;
   if (activeGridData) {
-    GRID_W = activeGridData.w; GRID_H = activeGridData.h;
+    GRID_W = activeGridData.w;
+    GRID_H = activeGridData.h;
     gridTex = createGridTexture(activeGridData.grid, GRID_W, GRID_H);
   } else {
-    const dummy = new Uint8Array([0,0,0,255]);
+    const dummy = new Uint8Array([0, 0, 0, 255]);
     gridTex = new THREE.DataTexture(dummy, 1, 1, THREE.RGBAFormat);
     gridTex.needsUpdate = true;
   }
 
   const _trailTexData = new Float32Array(MAX_TRAIL * 4);
   const _trailTex = new THREE.DataTexture(
-    _trailTexData, MAX_TRAIL, 1, THREE.RGBAFormat, THREE.FloatType
+    _trailTexData,
+    MAX_TRAIL,
+    1,
+    THREE.RGBAFormat,
+    THREE.FloatType,
   );
   _trailTex.minFilter = _trailTex.magFilter = THREE.NearestFilter;
 
   const material = new THREE.ShaderMaterial({
     uniforms: {
-      iTime:        { value: 0 },
-      iResolution:  { value: new THREE.Vector2(_res.w, _res.h) },
-      uColor1:      { value: new THREE.Vector3(...hexToRgb("#766FF6")) },
-      uPixelSize:   { value: physicalPixelSize },   // ← driven by calcPhysicalPixelSize()
-      uPixelGap:    { value: 0.18 },
-      uFontAtlas:   { value: fontAtlas },
-      uMousePos:    { value: new THREE.Vector2(-9999, -9999) },
+      iTime: { value: 0 },
+      iResolution: { value: new THREE.Vector2(_res.w, _res.h) },
+      uColor1: { value: new THREE.Vector3(...hexToRgb("#766FF6")) },
+      uPixelSize: { value: physicalPixelSize }, // ← driven by calcPhysicalPixelSize()
+      uPixelGap: { value: 0.18 },
+      uFontAtlas: { value: fontAtlas },
+      uMousePos: { value: new THREE.Vector2(-9999, -9999) },
       uMouseActive: { value: 0.0 },
-      uVelocity:    { value: new THREE.Vector2(0, 0) },
-      uTrailTex:    { value: _trailTex },
-      uTrailCount:  { value: 0 },
+      uVelocity: { value: new THREE.Vector2(0, 0) },
+      uTrailTex: { value: _trailTex },
+      uTrailCount: { value: 0 },
       uBgTop: {
-        value: (() => { const c = new THREE.Color("#30286c"); return new THREE.Vector3(c.r,c.g,c.b); })(),
+        value: (() => {
+          const c = new THREE.Color("#30286c");
+          return new THREE.Vector3(c.r, c.g, c.b);
+        })(),
       },
       uBgBot: {
-        value: (() => { const c = new THREE.Color("#1c1c26"); return new THREE.Vector3(c.r,c.g,c.b); })(),
+        value: (() => {
+          const c = new THREE.Color("#1c1c26");
+          return new THREE.Vector3(c.r, c.g, c.b);
+        })(),
       },
-      uGridTex:     { value: gridTex },
-      uGridDims:    { value: new THREE.Vector2(GRID_W, GRID_H) },
-      uGridCenter:  { value: getGridCenter() },
-      uHasGrid:     { value: activeGridData ? 1.0 : 0.0 },
-      uAnimSpeed:   { value: ANIM_CONFIG.animSpeed },
-      uAnimWindow:  { value: getAnimWindow() },
+      uGridTex: { value: gridTex },
+      uGridDims: { value: new THREE.Vector2(GRID_W, GRID_H) },
+      uGridCenter: { value: getGridCenter() },
+      uHasGrid: { value: activeGridData ? 1.0 : 0.0 },
+      uAnimSpeed: { value: ANIM_CONFIG.animSpeed },
+      uAnimWindow: { value: getAnimWindow() },
       uSeqDuration: { value: ANIM_CONFIG.seqDuration },
     },
     vertexShader,
@@ -3106,13 +3572,16 @@ function initOtherPagesShader() {
       const base = i * 4;
       if (i < _trailLen) {
         const slot = (_trailHead - 1 - i + MAX_TRAIL * 2) % MAX_TRAIL;
-        _trailTexData[base]     = _trailBuf[slot*3]   / _res.w;
-        _trailTexData[base + 1] = _trailBuf[slot*3+1] / _res.h;
-        _trailTexData[base + 2] = (now - _trailBuf[slot*3+2]) / TRAIL_DURATION;
+        _trailTexData[base] = _trailBuf[slot * 3] / _res.w;
+        _trailTexData[base + 1] = _trailBuf[slot * 3 + 1] / _res.h;
+        _trailTexData[base + 2] =
+          (now - _trailBuf[slot * 3 + 2]) / TRAIL_DURATION;
         _trailTexData[base + 3] = 0.0;
       } else {
-        _trailTexData[base] = -1.0; _trailTexData[base+1] = -1.0;
-        _trailTexData[base+2] = 1.0; _trailTexData[base+3] = 0.0;
+        _trailTexData[base] = -1.0;
+        _trailTexData[base + 1] = -1.0;
+        _trailTexData[base + 2] = 1.0;
+        _trailTexData[base + 3] = 0.0;
       }
     }
     _trailTex.needsUpdate = true;
@@ -3142,13 +3611,15 @@ function initOtherPagesShader() {
   const actualMouse = { x: -9999, y: -9999, active: false };
   const laggedMouse = { x: -9999, y: -9999 };
   const LERP_FACTOR = 0.15;
-  let lastMoveTime = 0, _dirty = true;
+  let lastMoveTime = 0,
+    _dirty = true;
 
   document.addEventListener("mousemove", (e) => {
-    const rect   = getRect();
-    const cssX   = e.clientX - rect.left;
-    const cssY   = e.clientY - rect.top;
-    const outside = cssX < 0 || cssX > rect.width || cssY < 0 || cssY > rect.height;
+    const rect = getRect();
+    const cssX = e.clientX - rect.left;
+    const cssY = e.clientY - rect.top;
+    const outside =
+      cssX < 0 || cssX > rect.width || cssY < 0 || cssY > rect.height;
     if (outside) {
       if (actualMouse.active) {
         actualMouse.active = false;
@@ -3161,7 +3632,10 @@ function initOtherPagesShader() {
     actualMouse.y = (rect.height - cssY) * DPR;
     actualMouse.active = true;
     lastMoveTime = performance.now();
-    if (laggedMouse.x === -9999) { laggedMouse.x = actualMouse.x; laggedMouse.y = actualMouse.y; }
+    if (laggedMouse.x === -9999) {
+      laggedMouse.x = actualMouse.x;
+      laggedMouse.y = actualMouse.y;
+    }
     _dirty = true;
   });
 
@@ -3189,7 +3663,9 @@ function initOtherPagesShader() {
     }
     if (lastMoveTime > 0 && now - lastMoveTime > 120) {
       material.uniforms.uMouseActive.value = 0.0;
-      lastMoveTime = 0; actualMouse.active = false; _dirty = true;
+      lastMoveTime = 0;
+      actualMouse.active = false;
+      _dirty = true;
     }
     if (_trailLen > 0) _dirty = true;
     if (activeGridData) _dirty = true;
@@ -3205,21 +3681,28 @@ function initOtherPagesShader() {
   animate();
 
   window.addEventListener("resize", () => {
-    physicalPixelSize = calcPhysicalPixelSize();            // ← NEW
+    physicalPixelSize = calcPhysicalPixelSize(); // ← NEW
     _res = getCanvasSize();
     renderer.setSize(_res.w, _res.h, false);
     material.uniforms.iResolution.value.set(_res.w, _res.h);
-    material.uniforms.uPixelSize.value = physicalPixelSize;  // ← NEW
+    material.uniforms.uPixelSize.value = physicalPixelSize; // ← NEW
     material.uniforms.uGridCenter.value.copy(getGridCenter());
     _dirty = true;
   });
 
   return {
-    pause()  { _paused = true; },
-    resume() { if (!_paused) return; _paused = false; _dirty = true; animate(); },
+    pause() {
+      _paused = true;
+    },
+    resume() {
+      if (!_paused) return;
+      _paused = false;
+      _dirty = true;
+      animate();
+    },
   };
 }
-PageAnimations.register(initOtherPagesShader);
+initOtherPagesShader();
 
 function initVisibilityControl() {
   const shaderSection = document.querySelector(".gradient-canvas");
@@ -3248,7 +3731,7 @@ function initVisibilityControl() {
   observer.observe(shaderSection);
   observer.observe(globeSection);
 }
-PageAnimations.register(initVisibilityControl);
+initVisibilityControl();
 
 function init3DGlobeAnimation() {
   window.init3DGlobe = async function init3DGlobe() {
@@ -3706,7 +4189,7 @@ function init3DGlobeAnimation() {
     window.init3DGlobe();
   }
 }
-PageAnimations.register(init3DGlobeAnimation);
+init3DGlobeAnimation();
 
 function initServiceAnimation() {
   const SRV_IMAGES = [
@@ -3992,7 +4475,7 @@ function initServiceAnimation() {
 
   onScroll();
 }
-PageAnimations.register(initServiceAnimation);
+initServiceAnimation();
 
 function initCompanyDarkOverlay() {
   const section = document.getElementById("company");
@@ -4039,7 +4522,7 @@ function initCompanyDarkOverlay() {
   window.addEventListener("resize", onScroll);
   onScroll();
 }
-PageAnimations.register(initCompanyDarkOverlay);
+initCompanyDarkOverlay();
 
 function initCompanyFadeAnimations() {
   const swiperRows = document.querySelectorAll(
@@ -4084,7 +4567,7 @@ function initCompanyFadeAnimations() {
     },
   });
 }
-PageAnimations.register(initCompanyFadeAnimations);
+initCompanyFadeAnimations();
 
 function initCaseStudyCounter() {
   const items = document.querySelectorAll(".item-casestudy");
@@ -4130,7 +4613,7 @@ function initCaseStudyCounter() {
 
   onScroll();
 }
-PageAnimations.register(initCaseStudyCounter);
+initCaseStudyCounter();
 
 function initFooterLinkAnimation() {
   function run() {
@@ -4197,7 +4680,7 @@ function initFooterLinkAnimation() {
     run();
   }
 }
-PageAnimations.register(initFooterLinkAnimation);
+initFooterLinkAnimation();
 
 function initWorkWithUsAnimation() {
   function run() {
@@ -4297,7 +4780,7 @@ function initWorkWithUsAnimation() {
     run();
   }
 }
-PageAnimations.register(initWorkWithUsAnimation);
+initWorkWithUsAnimation();
 
 function initSocialIconFlipAnimation() {
   function run() {
@@ -4375,7 +4858,7 @@ function initSocialIconFlipAnimation() {
 
   window.addEventListener("load", run);
 }
-PageAnimations.register(initSocialIconFlipAnimation);
+initSocialIconFlipAnimation();
 
 function initCaseStudyHoverAnimation() {
   document.querySelectorAll(".item-casestudy").forEach((item) => {
@@ -4482,7 +4965,7 @@ function initCaseStudyHoverAnimation() {
     });
   });
 }
-PageAnimations.register(initCaseStudyHoverAnimation);
+initCaseStudyHoverAnimation();
 
 function initServiceDelivery() {
   gsap.registerPlugin(ScrollTrigger);
@@ -4556,7 +5039,7 @@ function initServiceDelivery() {
     }
   }
 }
-PageAnimations.register(initServiceDelivery);
+initServiceDelivery();
 
 function initPrivate() {
   if (window._initPrivateDone) {
@@ -4574,11 +5057,13 @@ function initPrivate() {
     $(".nav-menu").removeClass("active");
   });
 
-  $(".arrow-menu").off("click.triplayz").on("click.triplayz", function(e) {
-    e.preventDefault();
-    $(this).toggleClass("active");
-    $(this).closest(".children-menu-mb").next(".sub-menu-mb").slideToggle();
-  });
+  $(".arrow-menu")
+    .off("click.triplayz")
+    .on("click.triplayz", function (e) {
+      e.preventDefault();
+      $(this).toggleClass("active");
+      $(this).closest(".children-menu-mb").next(".sub-menu-mb").slideToggle();
+    });
 
   const hasSwiperModel1 = document.querySelector(".swiper-model-1");
   const hasSwiperModel2 = document.querySelector(".swiper-model-2");
@@ -4652,7 +5137,13 @@ function initPrivate() {
     function initFooterReveal() {
       const footerEl = document.querySelector("footer");
       const barbaWrapper = document.querySelector("[data-barba='wrapper']");
-      if (!footerEl || !barbaWrapper || typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
+      if (
+        !footerEl ||
+        !barbaWrapper ||
+        typeof gsap === "undefined" ||
+        typeof ScrollTrigger === "undefined"
+      )
+        return;
 
       // Clean up any old wrapper from previous failed attempts
       let oldWrapper = footerEl.parentElement;
@@ -4662,7 +5153,10 @@ function initPrivate() {
       }
 
       // Disable parallax on mobile or if footer is taller than window to prevent clipping
-      if (window.innerWidth < 1024 || footerEl.offsetHeight >= window.innerHeight) {
+      if (
+        window.innerWidth < 1024 ||
+        footerEl.offsetHeight >= window.innerHeight
+      ) {
         gsap.set(footerEl, { clearProps: "all" });
         barbaWrapper.style.marginBottom = "";
         barbaWrapper.style.position = "";
@@ -4676,7 +5170,7 @@ function initPrivate() {
       barbaWrapper.style.position = "relative";
       barbaWrapper.style.zIndex = "2";
       barbaWrapper.style.backgroundColor = "#1D1D27";
-      
+
       // The transparent margin acts as a window to reveal the footer
       const FH = footerEl.offsetHeight;
       barbaWrapper.style.marginBottom = FH + "px";
@@ -4698,10 +5192,10 @@ function initPrivate() {
           scrollTrigger: {
             trigger: barbaWrapper,
             start: "bottom bottom", // Starts exactly when the margin-bottom enters the viewport
-            end: () => `+=${FH}`,   // Ends after scrolling the height of the footer
+            end: () => `+=${FH}`, // Ends after scrolling the height of the footer
             scrub: true,
           },
-        }
+        },
       );
     }
     initFooterReveal();
@@ -4901,19 +5395,25 @@ function initPrivate() {
 
     $this.on("mouseenter", function (e) {
       // Clear all other items in the same list instantly to ensure only ONE liquid is visible
-      $this.closest(".list").find(".item-tools").not($this).each(function () {
-        let $other = $(this);
-        let $otherPath = $other.find(".d-award-path");
-        let $otherLogo = $other.find(".logo");
+      $this
+        .closest(".list")
+        .find(".item-tools")
+        .not($this)
+        .each(function () {
+          let $other = $(this);
+          let $otherPath = $other.find(".d-award-path");
+          let $otherLogo = $other.find(".logo");
 
-        // Kill any running timelines on siblings
-        gsap.killTweensOf($otherPath);
-        gsap.killTweensOf($otherLogo);
+          // Kill any running timelines on siblings
+          gsap.killTweensOf($otherPath);
+          gsap.killTweensOf($otherLogo);
 
-        // Reset siblings to hidden/empty state
-        gsap.set($otherPath, { attr: { d: "M 0 100 V 100 Q 250 100 500 100 V 100 z" } });
-        gsap.set($otherLogo, { opacity: window.innerWidth < 768 ? 1 : 0 });
-      });
+          // Reset siblings to hidden/empty state
+          gsap.set($otherPath, {
+            attr: { d: "M 0 100 V 100 Q 250 100 500 100 V 100 z" },
+          });
+          gsap.set($otherLogo, { opacity: window.innerWidth < 768 ? 1 : 0 });
+        });
 
       if (tl) tl.kill();
       tl = gsap.timeline();
@@ -4929,27 +5429,39 @@ function initPrivate() {
 
       if (isTop) {
         // Enter from top (Moving DOWN): Arch DOWN
-        gsap.set($path[0], { attr: { d: "M 0 0 Q 250 0 500 0 V 0 Q 250 0 0 0 z" } });
-        tl.to($path[0], {
-          attr: { d: "M 0 0 Q 250 40 500 0 V 50 Q 250 90 0 50 z" },
-          duration: 0.15,
-          ease: "sine.in",
-        }, 0).to($path[0], {
+        gsap.set($path[0], {
+          attr: { d: "M 0 0 Q 250 0 500 0 V 0 Q 250 0 0 0 z" },
+        });
+        tl.to(
+          $path[0],
+          {
+            attr: { d: "M 0 0 Q 250 40 500 0 V 50 Q 250 90 0 50 z" },
+            duration: 0.15,
+            ease: "sine.in",
+          },
+          0,
+        ).to($path[0], {
           attr: { d: "M 0 0 Q 250 0 500 0 V 100 Q 250 100 0 100 z" },
           duration: 0.15,
           ease: "sine.out",
         });
       } else {
         // Enter from bottom (Moving UP): Arch UP
-        gsap.set($path[0], { attr: { d: "M 0 100 Q 250 100 500 100 V 100 Q 250 100 0 100 z" } });
-        tl.to($path[0], {
-          attr: { d: "M 0 100 Q 250 80 500 100 V 50 Q 250 -20 0 50 z" },
-          duration: 0.15,
-          ease: "sine.in"
-        }, 0).to($path[0], {
+        gsap.set($path[0], {
+          attr: { d: "M 0 100 Q 250 100 500 100 V 100 Q 250 100 0 100 z" },
+        });
+        tl.to(
+          $path[0],
+          {
+            attr: { d: "M 0 100 Q 250 80 500 100 V 50 Q 250 -20 0 50 z" },
+            duration: 0.15,
+            ease: "sine.in",
+          },
+          0,
+        ).to($path[0], {
           attr: { d: "M 0 100 Q 250 100 500 100 V 0 Q 250 0 0 0 z" },
           duration: 0.15,
-          ease: "sine.out"
+          ease: "sine.out",
         });
       }
     });
@@ -4963,40 +5475,57 @@ function initPrivate() {
       let isTop = relY < rect.height / 2;
 
       // Animate logo opacity back
-      tl.to($logo, { opacity: window.innerWidth < 768 ? 1 : 0, duration: 0.2, ease: "sine.in" }, 0);
+      tl.to(
+        $logo,
+        {
+          opacity: window.innerWidth < 768 ? 1 : 0,
+          duration: 0.2,
+          ease: "sine.in",
+        },
+        0,
+      );
 
       if (isTop) {
         // Exit from top (Moving UP): Arch UP
-        gsap.set($path[0], { attr: { d: "M 0 0 Q 250 0 500 0 V 100 Q 250 100 0 100 z" } });
-        tl.to($path[0], {
-          attr: { d: "M 0 0 Q 250 20 500 0 V 50 Q 250 -30 0 50 z" },
-          duration: 0.12,
-          ease: "sine.in"
-        }, 0).to($path[0], {
+        gsap.set($path[0], {
+          attr: { d: "M 0 0 Q 250 0 500 0 V 100 Q 250 100 0 100 z" },
+        });
+        tl.to(
+          $path[0],
+          {
+            attr: { d: "M 0 0 Q 250 20 500 0 V 50 Q 250 -30 0 50 z" },
+            duration: 0.12,
+            ease: "sine.in",
+          },
+          0,
+        ).to($path[0], {
           attr: { d: "M 0 0 Q 250 0 500 0 V 0 Q 250 0 0 0 z" },
           duration: 0.12,
-          ease: "sine.out"
+          ease: "sine.out",
         });
       } else {
         // Exit from bottom (Moving DOWN): Arch DOWN
-        gsap.set($path[0], { attr: { d: "M 0 100 Q 250 100 500 100 V 0 Q 250 0 0 0 z" } });
-        tl.to($path[0], {
-          attr: { d: "M 0 100 Q 250 70 500 100 V 50 Q 250 120 0 50 z" },
-          duration: 0.12,
-          ease: "sine.in"
-        }, 0).to($path[0], {
+        gsap.set($path[0], {
+          attr: { d: "M 0 100 Q 250 100 500 100 V 0 Q 250 0 0 0 z" },
+        });
+        tl.to(
+          $path[0],
+          {
+            attr: { d: "M 0 100 Q 250 70 500 100 V 50 Q 250 120 0 50 z" },
+            duration: 0.12,
+            ease: "sine.in",
+          },
+          0,
+        ).to($path[0], {
           attr: { d: "M 0 100 Q 250 100 500 100 V 100 Q 250 100 0 100 z" },
           duration: 0.12,
-          ease: "sine.out"
+          ease: "sine.out",
         });
       }
     });
   });
 }
-PageAnimations.register(initPrivate);
-
-
-
+initPrivate();
 
 function initServiceGameScroll() {
   gsap.registerPlugin(ScrollTrigger);
@@ -5079,18 +5608,18 @@ function initServiceGameScroll() {
     });
   }
 }
-PageAnimations.register(initServiceGameScroll);
-
-
+initServiceGameScroll();
 
 function initServiceGameCursor() {
   // Handle accordion toggle only for mobile/tablet (<= 1023px)
-  $(".item-game").off("click").on("click", function () {
-    if (window.innerWidth <= 1023) {
-      $(this).find(".desc-item-game").slideToggle();
-      $(this).toggleClass("active");
-    }
-  });
+  $(".item-game")
+    .off("click")
+    .on("click", function () {
+      if (window.innerWidth <= 1023) {
+        $(this).find(".desc-item-game").slideToggle();
+        $(this).toggleClass("active");
+      }
+    });
 
   if (window.innerWidth < 1024) return;
 
@@ -5139,7 +5668,7 @@ function initServiceGameCursor() {
     gsap.set(cursorContainer, {
       opacity: 0,
       scale: 0.5,
-      overwrite: true
+      overwrite: true,
     });
   }
 
@@ -5169,7 +5698,7 @@ function initServiceGameCursor() {
       if (foundItem !== activeItem) {
         activateItem(foundItem, true);
       }
-      
+
       gsap.to(cursorContainer, {
         x: currentClientX - 60,
         y: currentClientY - 60,
@@ -5302,11 +5831,7 @@ function initServiceGameCursor() {
     { passive: true },
   );
 }
-PageAnimations.register(initServiceGameCursor);
-
-
-
-
+initServiceGameCursor();
 
 function initCaseStudy() {
   if (typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined") {
@@ -5347,9 +5872,7 @@ function initCaseStudy() {
     });
   }
 }
-PageAnimations.register(initCaseStudy);
-
-
+initCaseStudy();
 
 function initAchieveAnimation() {
   const achieveSection = document.getElementById("achieve-section");
@@ -5380,8 +5903,16 @@ function initAchieveAnimation() {
     contents.forEach((content, i) => {
       if (i === 0) return;
       tl.add(`step${i}`);
-      tl.to(contents[i - 1], { autoAlpha: 0, y: -40, duration: 1, ease: "power2.inOut" }, `step${i}`);
-      tl.to(content, { autoAlpha: 1, y: 0, duration: 1, ease: "power2.inOut" }, `step${i}+=0.2`);
+      tl.to(
+        contents[i - 1],
+        { autoAlpha: 0, y: -40, duration: 1, ease: "power2.inOut" },
+        `step${i}`,
+      );
+      tl.to(
+        content,
+        { autoAlpha: 1, y: 0, duration: 1, ease: "power2.inOut" },
+        `step${i}+=0.2`,
+      );
       tl.to({}, { duration: 0.5 });
     });
   });
@@ -5390,6 +5921,7 @@ function initAchieveAnimation() {
     gsap.set(contents, { clearProps: "all" });
   });
 }
+initAchieveAnimation();
 
 function initOurValueAnimation() {
   const ourValueItems = gsap.utils.toArray(".item-our-value");
@@ -5409,6 +5941,7 @@ function initOurValueAnimation() {
     });
   }
 }
+initOurValueAnimation();
 
 function initLeadersAnimation() {
   const leadersSection = document.getElementById("leaders-section");
@@ -5420,11 +5953,15 @@ function initLeadersAnimation() {
     const members = gsap.utils.toArray(".members-container .item-member");
     if (members.length > 0) {
       const shuffle = (array) => {
-        let currentIndex = array.length, randomIndex;
+        let currentIndex = array.length,
+          randomIndex;
         while (currentIndex !== 0) {
           randomIndex = Math.floor(Math.random() * currentIndex);
           currentIndex--;
-          [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+          [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex],
+            array[currentIndex],
+          ];
         }
         return array;
       };
@@ -5447,7 +5984,7 @@ function initLeadersAnimation() {
         });
       });
 
-      const travelDistance = (100 + (members.length - 1) * 85 + 15) + 80;
+      const travelDistance = 100 + (members.length - 1) * 85 + 15 + 80;
 
       gsap.to(members, {
         top: `-=${travelDistance}%`,
@@ -5472,16 +6009,19 @@ function initLeadersAnimation() {
     if (members.length > 0) gsap.set(members, { clearProps: "all" });
   });
 
-  $(".clc-desc-member").off("click").on("click", function () {
-    $(this).toggleClass("active");
-    $(this).closest(".item-member").find(".desc").slideToggle(400, () => {
-        ScrollTrigger.refresh();
+  $(".clc-desc-member")
+    .off("click")
+    .on("click", function () {
+      $(this).toggleClass("active");
+      $(this)
+        .closest(".item-member")
+        .find(".desc")
+        .slideToggle(400, () => {
+          ScrollTrigger.refresh();
+        });
     });
-  });
 }
-
-
-
+initLeadersAnimation();
 
 function initSecondAbout() {
   const items = [
@@ -5517,7 +6057,7 @@ function initSecondAbout() {
   const dotsEl = document.getElementById("dots");
   const outerEl = document.getElementById("outer");
   const textJourney = document.getElementById("text-journey");
-  
+
   if (!frame || !section || !dotsEl || !outerEl || !textJourney) return;
 
   const dateEl = section.querySelector(".outer span.relative");
@@ -5607,7 +6147,7 @@ function initSecondAbout() {
         ease: "none",
         onUpdate: () => {
           updateLayout(dummy.progress);
-        }
+        },
       });
 
     // Cleanup
@@ -5618,14 +6158,7 @@ function initSecondAbout() {
     };
   });
 }
-PageAnimations.register(initMosaicAndPixelReveal);
-PageAnimations.register(initAchieveAnimation);
-PageAnimations.register(initOurValueAnimation);
-PageAnimations.register(initSecondAbout);
-PageAnimations.register(initLeadersAnimation);
-
-
-
+initSecondAbout();
 
 function initMosaicAndPixelReveal() {
   const section = document.querySelector(".random-pixel");
@@ -5917,8 +6450,7 @@ function initMosaicAndPixelReveal() {
 
   onScroll();
 }
-
-
+initMosaicAndPixelReveal();
 
 function initCareerAnimation() {
   if (!document.querySelector(".avarta-paralax")) return;
@@ -5935,8 +6467,7 @@ function initCareerAnimation() {
     });
   }
 }
-PageAnimations.register(initCareerAnimation);
-
+initCareerAnimation();
 
 function initNavLinkAnimation() {
   const navAnims = Array.from(document.querySelectorAll(".nav-anim"));
@@ -6003,10 +6534,7 @@ function initNavLinkAnimation() {
     });
   });
 }
-PageAnimations.register(initNavLinkAnimation);
-
-
-
+initNavLinkAnimation();
 
 function initContactButtonAnimation() {
   document.querySelectorAll(".button_field").forEach((btn) => {
@@ -6131,22 +6659,16 @@ function initContactButtonAnimation() {
     });
   });
 }
-PageAnimations.register(initContactButtonAnimation);
-
-
-
-
-
-PageAnimations.runAll();
+initContactButtonAnimation();
 
 // Global Accordion Event Delegation
-if (typeof jQuery !== 'undefined') {
-  $(document).on('click', '.accordion-header', function () {
+if (typeof jQuery !== "undefined") {
+  $(document).on("click", ".accordion-header", function () {
     const $this = $(this);
-    const $content = $this.next('.accordion-content');
+    const $content = $this.next(".accordion-content");
 
     // Toggle open state for styling
-    $this.toggleClass('is-open');
+    $this.toggleClass("is-open");
 
     // Hiệu ứng slide toggle mượt mà
     $content.slideToggle(300);
