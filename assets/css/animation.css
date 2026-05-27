@@ -58,6 +58,7 @@ footer {
   width: 96px;
   height: 96px;
   overflow: visible;
+  display: none;
 }
 
 .circle-track {
