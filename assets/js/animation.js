@@ -3727,6 +3727,30 @@ function initServiceAnimation() {
     "service_game-3.php",
   ];
 
+  const SRV_TAGS = [
+    [
+      "Web & App Development",
+      "UI/UX & Creative Design",
+      "Business Platform & System Integration",
+      "MVP-as-a-Service",
+      "Data Visualization & Analytics",
+    ],
+    [
+      "Core Banking Integration",
+      "Payment Gateway",
+      "Risk & Compliance",
+      "Digital Lending",
+      "eKYC Solutions",
+    ],
+    [
+      "Cloud Migration",
+      "API Development",
+      "CRM & ERP Integration",
+      "DevOps & CI/CD",
+      "Cybersecurity",
+    ],
+  ];
+
   const TOTAL = SRV_IMAGES.length;
 
   // ─── Config ──────────────────────────────────────────────────────────────
@@ -3746,6 +3770,7 @@ function initServiceAnimation() {
   const descText = document.getElementById("srv-desc-text");
   const bullet = document.getElementById("srv-title-bullet");
   const wipeLine = document.getElementById("srv-wipe-line");
+  const tagsEl = document.getElementById("srv-tags");
   const scrollTrig = document.getElementById("srv-scroll-trigger");
   const imageStage = document.getElementById("srv-image-stage");
   const pinnedSec = document.getElementById("srv-pinned-section");
@@ -3760,6 +3785,7 @@ function initServiceAnimation() {
     !slotWindow ||
     !descText ||
     !bullet ||
+    !tagsEl ||
     !wipeLine ||
     !titleItems.length
   )
@@ -3837,6 +3863,16 @@ function initServiceAnimation() {
       descText.textContent = SRV_DESCRIPTIONS[idx];
       descText.style.opacity = "1";
     }, 200);
+
+    if (tagsEl) {
+      tagsEl.style.opacity = "0";
+      setTimeout(() => {
+        tagsEl.innerHTML = SRV_TAGS[idx]
+          .map((tag) => `<span class="srv-tag">${tag}</span>`)
+          .join("");
+        tagsEl.style.opacity = "1";
+      }, 200);
+    }
 
     // Cập nhật link button
     const srvBtn = document.querySelector("#srv-description .btn-main a");
